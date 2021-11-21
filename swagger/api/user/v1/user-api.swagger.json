@@ -16,7 +16,11 @@
     "application/json"
   ],
   "paths": {
+<<<<<<<< HEAD:swagger/api/user/v1/user-api.swagger.json
     "/v1/user": {
+========
+    "/v1/echo": {
+>>>>>>>> origin/main:pb/api/user/v1/user-api.swagger.json
       "post": {
         "operationId": "userApiService_CreateUser",
         "responses": {
