@@ -1,0 +1,19 @@
+syntax = "proto3";
+package user.api;
+
+option go_package = "github.com/alexeyzer/user";
+import "google/api/annotations.proto";
+
+
+ service userApiService {
+  rpc Echo(StringMessage) returns (StringMessage) {
+    option (google.api.http) = {
+      post: "/v1/example/echo"
+      body: "*"
+    };
+  };
+ }
+
+ message StringMessage {
+    string message = 1;
+ }
