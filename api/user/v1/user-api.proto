@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
  service userApiService {
   rpc Echo(StringMessage) returns (StringMessage) {
     option (google.api.http) = {
-      post: "/v1/example/echo"
+      post: "/v1/echo"
       body: "*"
     };
   };

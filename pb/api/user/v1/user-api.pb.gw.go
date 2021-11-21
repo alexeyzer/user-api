@@ -65,7 +65,7 @@ func local_request_UserApiService_Echo_0(ctx context.Context, marshaler runtime.
 
 }
 
-// RegisterUserApiServiceHandlerServer registers the http user_serivce for service UserApiService to "mux".
+// RegisterUserApiServiceHandlerServer registers the http handlers for service UserApiService to "mux".
 // UnaryRPC     :call UserApiServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterUserApiServiceHandlerFromEndpoint instead.
@@ -77,7 +77,7 @@ func RegisterUserApiServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/user.api.UserApiService/Echo", runtime.WithHTTPPathPattern("/v1/example/echo"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/user.api.UserApiService/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -122,14 +122,14 @@ func RegisterUserApiServiceHandlerFromEndpoint(ctx context.Context, mux *runtime
 	return RegisterUserApiServiceHandler(ctx, mux, conn)
 }
 
-// RegisterUserApiServiceHandler registers the http user_serivce for service UserApiService to "mux".
-// The user_serivce forward requests to the grpc endpoint over "conn".
+// RegisterUserApiServiceHandler registers the http handlers for service UserApiService to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
 func RegisterUserApiServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn grpc.ClientConnInterface) error {
 	return RegisterUserApiServiceHandlerClient(ctx, mux, NewUserApiServiceClient(conn))
 }
 
-// RegisterUserApiServiceHandlerClient registers the http user_serivce for service UserApiService
-// to "mux". The user_serivce forward requests to the grpc endpoint over the given implementation of "UserApiServiceClient".
+// RegisterUserApiServiceHandlerClient registers the http handlers for service UserApiService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "UserApiServiceClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "UserApiServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "UserApiServiceClient" to call the correct interceptors.
@@ -139,7 +139,7 @@ func RegisterUserApiServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/user.api.UserApiService/Echo", runtime.WithHTTPPathPattern("/v1/example/echo"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/user.api.UserApiService/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -159,7 +159,7 @@ func RegisterUserApiServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_UserApiService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "example", "echo"}, ""))
+	pattern_UserApiService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "echo"}, ""))
 )
 
 var (
