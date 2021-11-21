@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserApiServiceClient interface {
-	Echo(ctx context.Context, in *StringMessage, opts ...grpc.CallOption) (*StringMessage, error)
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 }
 
 type userApiServiceClient struct {
@@ -29,9 +29,9 @@ func NewUserApiServiceClient(cc grpc.ClientConnInterface) UserApiServiceClient {
 	return &userApiServiceClient{cc}
 }
 
-func (c *userApiServiceClient) Echo(ctx context.Context, in *StringMessage, opts ...grpc.CallOption) (*StringMessage, error) {
-	out := new(StringMessage)
-	err := c.cc.Invoke(ctx, "/user.api.userApiService/Echo", in, out, opts...)
+func (c *userApiServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
+	err := c.cc.Invoke(ctx, "/user.api.userApiService/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (c *userApiServiceClient) Echo(ctx context.Context, in *StringMessage, opts
 // All implementations must embed UnimplementedUserApiServiceServer
 // for forward compatibility
 type UserApiServiceServer interface {
-	Echo(context.Context, *StringMessage) (*StringMessage, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	mustEmbedUnimplementedUserApiServiceServer()
 }
 
@@ -50,8 +50,8 @@ type UserApiServiceServer interface {
 type UnimplementedUserApiServiceServer struct {
 }
 
-func (UnimplementedUserApiServiceServer) Echo(context.Context, *StringMessage) (*StringMessage, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
+func (UnimplementedUserApiServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
 func (UnimplementedUserApiServiceServer) mustEmbedUnimplementedUserApiServiceServer() {}
 
@@ -66,20 +66,20 @@ func RegisterUserApiServiceServer(s grpc.ServiceRegistrar, srv UserApiServiceSer
 	s.RegisterService(&UserApiService_ServiceDesc, srv)
 }
 
-func _UserApiService_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StringMessage)
+func _UserApiService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserApiServiceServer).Echo(ctx, in)
+		return srv.(UserApiServiceServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.api.userApiService/Echo",
+		FullMethod: "/user.api.userApiService/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserApiServiceServer).Echo(ctx, req.(*StringMessage))
+		return srv.(UserApiServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,8 +92,8 @@ var UserApiService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserApiServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Echo",
-			Handler:    _UserApiService_Echo_Handler,
+			MethodName: "CreateUser",
+			Handler:    _UserApiService_CreateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

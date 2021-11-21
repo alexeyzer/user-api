@@ -3,17 +3,33 @@ package user.api;
 
 option go_package = "github.com/alexeyzer/user";
 import "google/api/annotations.proto";
-
+import "validate/validate.proto";
 
  service userApiService {
-  rpc Echo(StringMessage) returns (StringMessage) {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
-      post: "/v1/example/echo"
+      post: "/v1/user"
       body: "*"
     };
   };
  }
 
- message StringMessage {
-    string message = 1;
+ message CreateUserRequest {
+    string name = 1 [(validate.rules).string = {min_len: 5, max_len: 100}];
+    string password = 2 [(validate.rules).string = {min_len: 5, max_len: 600}];
+    string surname = 3 [(validate.rules).string = {min_len: 5, max_len: 100}];
+    string patronymic = 4 [(validate.rules).string = {min_len: 5, max_len: 100}];
+    string phone = 5;
+    string email = 6 [(validate.rules).string.email = true];
+    string username = 7 [(validate.rules).string = {min_len: 5, max_len: 100}];
+ }
+
+ message CreateUserResponse {
+    string name = 1;
+    string password = 2;
+    string surname = 3;
+    string patronymic = 4;
+    string phone = 5;
+    string mail = 6;
+    string username = 7;
  }

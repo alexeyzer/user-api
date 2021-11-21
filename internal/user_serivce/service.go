@@ -6,12 +6,12 @@ import (
 )
 
 type UserApiServiceServer struct {
-	UserService service.UserService
+	userService service.UserService
 	desc.UnimplementedUserApiServiceServer
 }
 
 func NewUserApiServiceServer(userService service.UserService) *UserApiServiceServer {
 	return &UserApiServiceServer{
-		UserService: userService,
+		userService: userService,
 	}
 }

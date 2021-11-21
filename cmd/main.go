@@ -6,46 +6,62 @@ import (
 	"github.com/alexeyzer/user-api/internal/pkg/service"
 	"github.com/alexeyzer/user-api/internal/user_serivce"
 	gw "github.com/alexeyzer/user-api/pb/api/user/v1"
-	"github.com/golang/glog"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"net/http"
 )
 
-func RunGrpc() error {
+func serveSwagger(mux *http.ServeMux) {
+	prefix := "/swagger/"
+	sh := http.StripPrefix(prefix, http.FileServer(http.Dir("./swagger/")))
+	mux.Handle(prefix, sh)
+}
+
+func RunServer(userApiServiceServer *user_serivce.UserApiServiceServer) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	lis, err := net.Listen("tcp", ":8082")
+	grpcLis, err := net.Listen("tcp", ":8082")
 	if err != nil {
 		return err
 	}
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_validator.UnaryServerInterceptor(),
+			)))
 
-	userService := service.NewUserService()
-	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService)
-
-	grpcServer := grpc.NewServer()
 	gw.RegisterUserApiServiceServer(grpcServer, userApiServiceServer)
-	mux := runtime.NewServeMux()
+	go func() {
+		grpcServer.Serve(grpcLis)
+	}()
+
+	mux := http.NewServeMux()
+	gwmux := runtime.NewServeMux()
+	mux.Handle("/", gwmux)
+	serveSwagger(mux)
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(),
 	}
-	go func() {
-		gw.RegisterUserApiServiceHandlerFromEndpoint(ctx, mux, ":8082", opts)
-	}()
-	log.Println("app started")
-	grpcServer.Serve(lis)
+	gw.RegisterUserApiServiceHandlerFromEndpoint(ctx, gwmux, ":8082", opts)
+	http.ListenAndServe(":8080", mux)
 	return nil
 }
 
 func main() {
 	flag.Parse()
-	defer glog.Flush()
 
-	if err := RunGrpc(); err != nil {
-		glog.Fatal(err)
+	userService := service.NewUserService()
+	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService)
+	if err := RunServer(userApiServiceServer); err != nil {
+		log.Fatal(err)
 	}
+	log.Println("app started")
 }
+
+
