@@ -16,6 +16,36 @@
     "application/json"
   ],
   "paths": {
+    "/v1/echo": {
+      "get": {
+        "operationId": "userApiService_Echo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiEchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
     "/v1/user": {
       "post": {
         "operationId": "userApiService_CreateUser",
@@ -98,6 +128,14 @@
           "type": "string"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "apiEchoResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
           "type": "string"
         }
       }

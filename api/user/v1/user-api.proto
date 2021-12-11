@@ -12,16 +12,30 @@ import "validate/validate.proto";
       body: "*"
     };
   };
+
+   rpc Echo(EchoRequest) returns (EchoResponse) {
+     option (google.api.http) = {
+       get: "/v1/echo"
+     };
+   };
  }
 
+ message EchoRequest {
+   string message = 1;
+ }
+
+message EchoResponse {
+  string message = 1;
+}
+
  message CreateUserRequest {
-    string name = 1 [(validate.rules).string = {min_len: 5, max_len: 100}];
-    string password = 2 [(validate.rules).string = {min_len: 5, max_len: 600}];
-    string surname = 3 [(validate.rules).string = {min_len: 5, max_len: 100}];
-    string patronymic = 4 [(validate.rules).string = {min_len: 5, max_len: 100}];
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string password = 2 [(validate.rules).string = {min_len: 1, max_len: 600}];
+    string surname = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string patronymic = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
     string phone = 5;
     string email = 6 [(validate.rules).string.email = true];
-    string username = 7 [(validate.rules).string = {min_len: 5, max_len: 100}];
+    string username = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
  }
 
  message CreateUserResponse {

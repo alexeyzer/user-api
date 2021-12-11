@@ -35,6 +35,206 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on EchoRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *EchoRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on EchoRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in EchoRequestMultiError, or
+// nil if none found.
+func (m *EchoRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *EchoRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return EchoRequestMultiError(errors)
+	}
+	return nil
+}
+
+// EchoRequestMultiError is an error wrapping multiple validation errors
+// returned by EchoRequest.ValidateAll() if the designated constraints aren't met.
+type EchoRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EchoRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EchoRequestMultiError) AllErrors() []error { return m }
+
+// EchoRequestValidationError is the validation error returned by
+// EchoRequest.Validate if the designated constraints aren't met.
+type EchoRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EchoRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EchoRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EchoRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EchoRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EchoRequestValidationError) ErrorName() string { return "EchoRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e EchoRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEchoRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EchoRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EchoRequestValidationError{}
+
+// Validate checks the field values on EchoResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *EchoResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on EchoResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in EchoResponseMultiError, or
+// nil if none found.
+func (m *EchoResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *EchoResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return EchoResponseMultiError(errors)
+	}
+	return nil
+}
+
+// EchoResponseMultiError is an error wrapping multiple validation errors
+// returned by EchoResponse.ValidateAll() if the designated constraints aren't met.
+type EchoResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EchoResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EchoResponseMultiError) AllErrors() []error { return m }
+
+// EchoResponseValidationError is the validation error returned by
+// EchoResponse.Validate if the designated constraints aren't met.
+type EchoResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EchoResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EchoResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EchoResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EchoResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EchoResponseValidationError) ErrorName() string { return "EchoResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e EchoResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEchoResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EchoResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EchoResponseValidationError{}
+
 // Validate checks the field values on CreateUserRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -57,10 +257,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 5 || l > 100 {
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 100 {
 		err := CreateUserRequestValidationError{
 			field:  "Name",
-			reason: "value length must be between 5 and 100 runes, inclusive",
+			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -68,10 +268,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetPassword()); l < 5 || l > 600 {
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 1 || l > 600 {
 		err := CreateUserRequestValidationError{
 			field:  "Password",
-			reason: "value length must be between 5 and 600 runes, inclusive",
+			reason: "value length must be between 1 and 600 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -79,10 +279,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetSurname()); l < 5 || l > 100 {
+	if l := utf8.RuneCountInString(m.GetSurname()); l < 1 || l > 100 {
 		err := CreateUserRequestValidationError{
 			field:  "Surname",
-			reason: "value length must be between 5 and 100 runes, inclusive",
+			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -90,10 +290,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetPatronymic()); l < 5 || l > 100 {
+	if l := utf8.RuneCountInString(m.GetPatronymic()); l < 1 || l > 100 {
 		err := CreateUserRequestValidationError{
 			field:  "Patronymic",
-			reason: "value length must be between 5 and 100 runes, inclusive",
+			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -115,10 +315,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetUsername()); l < 5 || l > 100 {
+	if l := utf8.RuneCountInString(m.GetUsername()); l < 1 || l > 100 {
 		err := CreateUserRequestValidationError{
 			field:  "Username",
-			reason: "value length must be between 5 and 100 runes, inclusive",
+			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
 		if !all {
 			return err
