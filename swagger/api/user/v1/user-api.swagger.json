@@ -46,6 +46,102 @@
         ]
       }
     },
+    "/v1/login": {
+      "post": {
+        "operationId": "userApiService_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/logout": {
+      "post": {
+        "operationId": "userApiService_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/session/check": {
+      "post": {
+        "operationId": "userApiService_SessionCheck",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSessionCheckResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
     "/v1/user": {
       "post": {
         "operationId": "userApiService_CreateUser",
@@ -109,10 +205,11 @@
     "apiCreateUserResponse": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string"
+        "id": {
+          "type": "string",
+          "format": "int64"
         },
-        "password": {
+        "name": {
           "type": "string"
         },
         "surname": {
@@ -124,7 +221,7 @@
         "phone": {
           "type": "string"
         },
-        "mail": {
+        "email": {
           "type": "string"
         },
         "username": {
@@ -136,6 +233,33 @@
       "type": "object",
       "properties": {
         "message": {
+          "type": "string"
+        }
+      }
+    },
+    "apiLoginRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "apiLoginResponse": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string"
+        }
+      }
+    },
+    "apiSessionCheckResponse": {
+      "type": "object",
+      "properties": {
+        "username": {
           "type": "string"
         }
       }

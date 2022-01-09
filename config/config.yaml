@@ -1,0 +1,20 @@
+version: 3
+
+auth:
+  session_key: "x-sessionID"
+  logout_key: "logout"
+database:
+  dsn: "host=%s port=%s dbname=%s user=%s password=%s sslmode=%s"
+  dbname: "user-api"
+  host: "51.250.0.63"
+  port: "5432"
+  user: "user-api"
+  password: "password"
+  ssl: "disable"
+redis:
+  host: "51.250.0.63"
+  port: "6379"
+  password: ""
+app:
+  http_port: "8080"
+  grpc_port: "8082"
