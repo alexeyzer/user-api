@@ -3,6 +3,7 @@ package user.api;
 
 option go_package = "github.com/alexeyzer/user";
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 
  service userApiService {
@@ -13,6 +14,27 @@ import "validate/validate.proto";
     };
   };
 
+   rpc Login(LoginRequest) returns (LoginResponse) {
+     option (google.api.http) = {
+       post: "/v1/login"
+       body: "*"
+     };
+   };
+
+   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+       post: "/v1/logout"
+       body: "*"
+     };
+   };
+
+   rpc SessionCheck(google.protobuf.Empty) returns (SessionCheckResponse) {
+     option (google.api.http) = {
+       post: "/v1/session/check"
+       body: "*"
+     };
+   };
+
    rpc Echo(EchoRequest) returns (EchoResponse) {
      option (google.api.http) = {
        get: "/v1/echo"
@@ -20,12 +42,26 @@ import "validate/validate.proto";
    };
  }
 
+
+message SessionCheckResponse {
+  string username = 1;
+}
+
  message EchoRequest {
    string message = 1;
  }
 
 message EchoResponse {
   string message = 1;
+}
+
+message LoginRequest {
+  string username = 1 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string password = 2 [(validate.rules).string = {min_len: 1, max_len: 600}];
+}
+
+message LoginResponse {
+  string session_id = 1;
 }
 
  message CreateUserRequest {
@@ -39,11 +75,11 @@ message EchoResponse {
  }
 
  message CreateUserResponse {
-    string name = 1;
-    string password = 2;
-    string surname = 3;
-    string patronymic = 4;
-    string phone = 5;
-    string mail = 6;
-    string username = 7;
+   int64 id = 1;
+   string name = 2;
+   string surname = 3;
+   string patronymic = 4;
+   string phone = 5;
+   string email = 6;
+   string username = 7;
  }

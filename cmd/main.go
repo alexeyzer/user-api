@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/alexeyzer/user-api/config"
+	"github.com/alexeyzer/user-api/internal/client"
+	"github.com/alexeyzer/user-api/internal/pkg/repository"
 	"github.com/alexeyzer/user-api/internal/pkg/service"
 	"github.com/alexeyzer/user-api/internal/user_serivce"
 	gw "github.com/alexeyzer/user-api/pb/api/user/v1"
@@ -11,6 +14,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/proto"
 	"net"
 	"net/http"
 	"time"
@@ -22,12 +27,48 @@ func serveSwagger(mux *http.ServeMux) {
 	mux.Handle(prefix, sh)
 }
 
-func RunServer(userApiServiceServer *user_serivce.UserApiServiceServer) error {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+// look up session and pass sessionId in to context if it exists
+func gatewayMetadataAnnotator(_ context.Context, r *http.Request) metadata.MD {
+	SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
+	if ok == nil {
+		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID.Value)
+	}
+	return metadata.Pairs()
+}
 
-	grpcLis, err := net.Listen("tcp", ":8082")
+func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Message) error {
+	md, ok := runtime.ServerMetadataFromContext(ctx)
+	if !ok {
+		return nil
+	}
+
+	sessionID := md.HeaderMD.Get(config.Config.Auth.SessionKey)
+	logout := md.HeaderMD.Get(config.Config.Auth.LogoutKey)
+	if len(sessionID) > 0 {
+		if len(logout) == 0 {
+			http.SetCookie(w, &http.Cookie{
+				Name:     config.Config.Auth.SessionKey,
+				Value:    sessionID[0],
+				Path:     "/",
+				HttpOnly: true,
+				Expires:  time.Now().Add(time.Hour * 24),
+			})
+		} else {
+			http.SetCookie(w, &http.Cookie{
+				Name:     config.Config.Auth.SessionKey,
+				Value:    sessionID[0],
+				Path:     "/",
+				HttpOnly: true,
+				Expires:  time.Now().Add(time.Duration(-1) * time.Hour * 24),
+			})
+		}
+	}
+	return nil
+}
+
+func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiServiceServer) error {
+
+	grpcLis, err := net.Listen("tcp", ":"+config.Config.App.GrpcPort)
 	if err != nil {
 		return err
 	}
@@ -38,14 +79,14 @@ func RunServer(userApiServiceServer *user_serivce.UserApiServiceServer) error {
 	gw.RegisterUserApiServiceServer(grpcServer, userApiServiceServer)
 
 	mux := http.NewServeMux()
-	gwmux := runtime.NewServeMux()
+	gwmux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadataAnnotator), runtime.WithForwardResponseOption(httpResponseModifier))
 	mux.Handle("/", gwmux)
 	serveSwagger(mux)
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(),
 	}
-	err = gw.RegisterUserApiServiceHandlerFromEndpoint(ctx, gwmux, ":8082", opts)
+	err = gw.RegisterUserApiServiceHandlerFromEndpoint(ctx, gwmux, ":"+config.Config.App.GrpcPort, opts)
 	if err != nil {
 		return err
 	}
@@ -54,15 +95,34 @@ func RunServer(userApiServiceServer *user_serivce.UserApiServiceServer) error {
 		log.Fatal(err)
 	}()
 	log.Println("app started")
-	err = http.ListenAndServe(":8080", mux)
+	err = http.ListenAndServe(":"+config.Config.App.HttpPort, mux)
 	return err
 }
 
 func main() {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
-	userService := service.NewUserService()
+	err := config.ReadConf("./config/config.yaml")
+	if err != nil {
+		log.Fatal("Failed to create config: ", err)
+	}
+
+	dao, err := repository.NewDao()
+	if err != nil {
+		log.Fatal("Failed to connect to db: ", err)
+	}
+
+	redis, err := client.NewRedisClient(ctx)
+	if err != nil {
+		log.Fatal("Failed to connect to redis db: ", err)
+	}
+
+	userService := service.NewUserService(dao, redis)
+
 	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService)
-	if err := RunServer(userApiServiceServer); err != nil {
+	if err := RunServer(ctx, userApiServiceServer); err != nil {
 		log.Fatal(err)
 	}
 }
