@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"net"
+	"net/http"
+	"time"
+
 	"github.com/alexeyzer/user-api/config"
 	"github.com/alexeyzer/user-api/internal/client"
 	"github.com/alexeyzer/user-api/internal/pkg/repository"
@@ -16,9 +20,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
-	"net"
-	"net/http"
-	"time"
 )
 
 func serveSwagger(mux *http.ServeMux) {
@@ -66,6 +67,16 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 	return nil
 }
 
+func cors(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
+		h.ServeHTTP(w, r)
+	})
+}
+
 func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiServiceServer) error {
 
 	grpcLis, err := net.Listen("tcp", ":"+config.Config.App.GrpcPort)
@@ -80,7 +91,7 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 
 	mux := http.NewServeMux()
 	gwmux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadataAnnotator), runtime.WithForwardResponseOption(httpResponseModifier))
-	mux.Handle("/", gwmux)
+	mux.Handle("/", cors(gwmux))
 	serveSwagger(mux)
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
