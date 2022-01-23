@@ -49,6 +49,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 		if len(logout) == 0 {
 			http.SetCookie(w, &http.Cookie{
 				Name:     config.Config.Auth.SessionKey,
+				SameSite: http.SameSiteNoneMode,
 				Value:    sessionID[0],
 				Path:     "/",
 				HttpOnly: true,
@@ -57,6 +58,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 		} else {
 			http.SetCookie(w, &http.Cookie{
 				Name:     config.Config.Auth.SessionKey,
+				SameSite: http.SameSiteNoneMode,
 				Value:    sessionID[0],
 				Path:     "/",
 				HttpOnly: true,
