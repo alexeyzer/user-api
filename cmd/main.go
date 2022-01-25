@@ -50,18 +50,18 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 			http.SetCookie(w, &http.Cookie{
 				Name:     config.Config.Auth.SessionKey,
 				Value:    sessionID[0],
-				Secure:   false,
 				Path:     "/",
 				HttpOnly: true,
+				Domain: "http://localhost:8080",
 				Expires:  time.Now().Add(time.Hour * 24),
 			})
 		} else {
 			http.SetCookie(w, &http.Cookie{
 				Name:     config.Config.Auth.SessionKey,
 				Value:    sessionID[0],
-				Secure:   false,
 				Path:     "/",
 				HttpOnly: true,
+				Domain: "http://localhost:8080",
 				Expires:  time.Now().Add(time.Duration(-1) * time.Hour * 24),
 			})
 		}
@@ -72,7 +72,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 func cors(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("origin"))
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
