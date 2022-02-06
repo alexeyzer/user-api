@@ -6,13 +6,13 @@ auth:
 database:
   dsn: "host=%s port=%s dbname=%s user=%s password=%s sslmode=%s"
   dbname: "user-api"
-  host: "51.250.0.63"
+  host: "62.84.127.244"
   port: "5432"
   user: "user-api"
   password: "password"
   ssl: "disable"
 redis:
-  host: "51.250.0.63"
+  host: "62.84.127.244"
   port: "6379"
   password: ""
 app:
