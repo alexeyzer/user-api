@@ -31,6 +31,7 @@ func serveSwagger(mux *http.ServeMux) {
 // look up session and pass sessionId in to context if it exists
 func gatewayMetadataAnnotator(_ context.Context, r *http.Request) metadata.MD {
 	SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
+	log.Println(SessionID, ok)
 	if ok == nil {
 		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID.Value)
 	}

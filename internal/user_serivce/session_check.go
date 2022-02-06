@@ -8,10 +8,10 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *UserApiServiceServer) SessionCheck(ctx context.Context, req *emptypb.Empty) (*desc.SessionCheckResponse, error) {
+func (s *UserApiServiceServer) SessionCheck(ctx context.Context, _ *emptypb.Empty) (*desc.SessionCheckResponse, error) {
 	sessionId := s.GetSessionIDFromContext(ctx)
 	if sessionId == "" {
-		return nil, status.Errorf(codes.Unauthenticated, "sessionID does`t exists")
+		return nil, status.Errorf(codes.Unauthenticated, "sessionID not in header")
 	}
 	res, err := s.userService.SessionCheck(ctx, sessionId)
 	if err != nil {
