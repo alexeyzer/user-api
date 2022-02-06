@@ -52,8 +52,10 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 				Value:    sessionID[0],
 				Path:     "/",
 				HttpOnly: true,
-				Domain: "http://localhost:8080",
+				Domain:   "localhost:8080",
 				Expires:  time.Now().Add(time.Hour * 24),
+				SameSite: http.SameSiteNoneMode,
+				Secure:   true,
 			})
 		} else {
 			http.SetCookie(w, &http.Cookie{
@@ -61,8 +63,10 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 				Value:    sessionID[0],
 				Path:     "/",
 				HttpOnly: true,
-				Domain: "http://localhost:8080",
+				Domain:   "localhost:8080",
 				Expires:  time.Now().Add(time.Duration(-1) * time.Hour * 24),
+				SameSite: http.SameSiteNoneMode,
+				Secure:   true,
 			})
 		}
 	}
