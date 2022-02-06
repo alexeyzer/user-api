@@ -10,5 +10,4 @@ type User struct {
 	Password   []byte `db:"password"`
 	Phone      string `db:"phone"`
 	Email      string `db:"email"`
-	Username   string `db:"username"`
 }

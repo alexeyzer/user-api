@@ -9,8 +9,8 @@ import (
 
 type UserQuery interface {
 	Create(ctx context.Context, req User) (*User, error)
-	Get(ctx context.Context, username string) (*User, error)
-	Exists(ctx context.Context, username string) (bool, error)
+	Get(ctx context.Context, email string) (*User, error)
+	Exists(ctx context.Context, email string) (bool, error)
 }
 
 type userQuery struct {
@@ -27,7 +27,6 @@ func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
 			"password",
 			"phone",
 			"email",
-			"username",
 		).
 		Values(
 			req.Name,
@@ -36,7 +35,6 @@ func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
 			req.Password,
 			req.Phone,
 			req.Email,
-			req.Username,
 		).
 		Suffix("RETURNING *")
 	query, args, err := qb.ToSql()
@@ -54,11 +52,11 @@ func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
 	return &user, nil
 }
 
-func (q *userQuery) Get(ctx context.Context, username string) (*User, error) {
+func (q *userQuery) Get(ctx context.Context, email string) (*User, error) {
 	qb := q.builder.
 		Select("*").
 		From(UserTableName).
-		Where(squirrel.Eq{"username": username})
+		Where(squirrel.Eq{"email": email})
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return nil, err
@@ -78,7 +76,7 @@ func (q *userQuery) Exists(ctx context.Context, username string) (bool, error) {
 	qb := q.builder.
 		Select("*").
 		From(UserTableName).
-		Where(squirrel.Eq{"username": username})
+		Where(squirrel.Eq{"email": username})
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return false, err

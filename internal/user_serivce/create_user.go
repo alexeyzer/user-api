@@ -28,6 +28,5 @@ func (s *UserApiServiceServer) serviceCreateUserResponseToProtoCreateUserRespons
 		Patronymic: res.Patronymic,
 		Phone:      res.Phone,
 		Email:      res.Email,
-		Username:   res.Username,
 	}
 }

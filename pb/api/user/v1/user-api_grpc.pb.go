@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserApiServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	GetUserBySession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SessionCheck(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SessionCheckResponse, error)
@@ -37,6 +38,15 @@ func NewUserApiServiceClient(cc grpc.ClientConnInterface) UserApiServiceClient {
 func (c *userApiServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
 	out := new(CreateUserResponse)
 	err := c.cc.Invoke(ctx, "/user.api.userApiService/CreateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userApiServiceClient) GetUserBySession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
+	err := c.cc.Invoke(ctx, "/user.api.userApiService/GetUserBySession", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +94,7 @@ func (c *userApiServiceClient) Echo(ctx context.Context, in *EchoRequest, opts .
 // for forward compatibility
 type UserApiServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	GetUserBySession(context.Context, *emptypb.Empty) (*CreateUserResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	SessionCheck(context.Context, *emptypb.Empty) (*SessionCheckResponse, error)
@@ -97,6 +108,9 @@ type UnimplementedUserApiServiceServer struct {
 
 func (UnimplementedUserApiServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedUserApiServiceServer) GetUserBySession(context.Context, *emptypb.Empty) (*CreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserBySession not implemented")
 }
 func (UnimplementedUserApiServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
@@ -137,6 +151,24 @@ func _UserApiService_CreateUser_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserApiServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserApiService_GetUserBySession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserApiServiceServer).GetUserBySession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.api.userApiService/GetUserBySession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserApiServiceServer).GetUserBySession(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -223,6 +255,10 @@ var UserApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUser",
 			Handler:    _UserApiService_CreateUser_Handler,
+		},
+		{
+			MethodName: "GetUserBySession",
+			Handler:    _UserApiService_GetUserBySession_Handler,
 		},
 		{
 			MethodName: "Login",

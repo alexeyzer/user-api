@@ -143,6 +143,26 @@
       }
     },
     "/v1/user": {
+      "get": {
+        "operationId": "userApiService_GetUserBySession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "userApiService"
+        ]
+      },
       "post": {
         "operationId": "userApiService_CreateUser",
         "responses": {
@@ -196,9 +216,6 @@
         },
         "email": {
           "type": "string"
-        },
-        "username": {
-          "type": "string"
         }
       }
     },
@@ -223,9 +240,6 @@
         },
         "email": {
           "type": "string"
-        },
-        "username": {
-          "type": "string"
         }
       }
     },
@@ -240,7 +254,7 @@
     "apiLoginRequest": {
       "type": "object",
       "properties": {
-        "username": {
+        "email": {
           "type": "string"
         },
         "password": {

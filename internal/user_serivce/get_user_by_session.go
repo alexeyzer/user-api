@@ -8,14 +8,14 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *UserApiServiceServer) SessionCheck(ctx context.Context, _ *emptypb.Empty) (*desc.SessionCheckResponse, error) {
+func (s *UserApiServiceServer) GetUserBySession(ctx context.Context, _ *emptypb.Empty) (*desc.CreateUserResponse, error) {
 	sessionId := s.GetSessionIDFromContext(ctx)
 	if sessionId == "" {
 		return nil, status.Errorf(codes.Unauthenticated, "sessionID does`t exists")
 	}
-	res, err := s.userService.SessionCheck(ctx, sessionId)
+	res, err := s.userService.GetBySession(ctx, sessionId)
 	if err != nil {
 		return nil, err
 	}
-	return &desc.SessionCheckResponse{Username: *res}, nil
+	return s.serviceCreateUserResponseToProtoCreateUserResponse(res), nil
 }

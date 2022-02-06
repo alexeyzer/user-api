@@ -17,6 +17,7 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error)
+	GetBySession(ctx context.Context, sessionID string) (*repository.User, error)
 	Login(ctx context.Context, req *desc.LoginRequest) (*string, error)
 	SessionCheck(ctx context.Context, sessionID string) (*string, error)
 	DeleteSession(ctx context.Context, sessionID string) error
@@ -25,6 +26,18 @@ type UserService interface {
 type userService struct {
 	dao   repository.DAO
 	redis client.RedisClient
+}
+
+func (s *userService) GetBySession(ctx context.Context, sessionID string) (*repository.User, error) {
+	email, err := s.SessionCheck(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	user, err := s.dao.UserQuery().Get(ctx, *email)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (s *userService) DeleteSession(ctx context.Context, sessionID string) error {
@@ -43,34 +56,34 @@ func (s *userService) DeleteSession(ctx context.Context, sessionID string) error
 
 func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*string, error) {
 
-	value, err := s.redis.Get(ctx, sessionID)
+	email, err := s.redis.Get(ctx, sessionID)
 	if err != nil {
 		return nil, err
 	}
-	return &value, nil
+	return &email, nil
 }
 
 func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*string, error) {
-	exists, err := s.dao.UserQuery().Exists(ctx, req.Username)
+	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
 		return nil, err
 	}
 	if exists == false {
-		return nil, status.Errorf(codes.InvalidArgument, "User with username = %s doesn't exist", req.Username)
+		return nil, status.Errorf(codes.InvalidArgument, "User with username = %s doesn't exist", req.Email)
 	}
-	user, err := s.dao.UserQuery().Get(ctx, req.Username)
+	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
 		return nil, err
 	}
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(req.Password))
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Username)
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
 	}
 
 	sessionID := uuid.New().String()
-	err = s.redis.Set(ctx, sessionID, user.Username)
+	err = s.redis.Set(ctx, sessionID, user.Email)
 	if err != nil {
-		log.Warnf("failed to create sessionID for user = %s", user.Username)
+		log.Warnf("failed to create sessionID for user = %s", user.Email)
 	}
 	if err := grpc.SetHeader(ctx, metadata.Pairs(config.Config.Auth.SessionKey, sessionID)); err != nil {
 		return nil, err
@@ -79,12 +92,12 @@ func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*strin
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error) {
-	exists, err := s.dao.UserQuery().Exists(ctx, req.Username)
+	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
 		return nil, err
 	}
 	if exists == true {
-		return nil, status.Errorf(codes.InvalidArgument, "User with username = %s already exists", req.Username)
+		return nil, status.Errorf(codes.InvalidArgument, "User with email = %s already exists", req.Email)
 	}
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -95,9 +108,9 @@ func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserReques
 		return nil, err
 	}
 	sessionID := uuid.New().String()
-	err = s.redis.Set(ctx, sessionID, res.Username)
+	err = s.redis.Set(ctx, sessionID, res.Email)
 	if err != nil {
-		log.Warnf("failed to create sessionID for user = %s", res.Username)
+		log.Warnf("failed to create sessionID for user = %s", res.Email)
 	}
 
 	return res, nil
@@ -106,7 +119,6 @@ func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserReques
 func (s *userService) serviceUserReqToDaoUser(req *desc.CreateUserRequest, password []byte) repository.User {
 	return repository.User{
 		Name:       req.Name,
-		Username:   req.Username,
 		Password:   password,
 		Surname:    req.Surname,
 		Patronymic: req.Patronymic,
