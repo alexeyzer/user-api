@@ -39,7 +39,7 @@ func (c *redisClient) Get(ctx context.Context, key string) (string, error) {
 	val, err := c.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		if err == redis.Nil {
-			return "", status.Errorf(codes.Unauthenticated, "redis: sessionID does`t exists")
+			return "", status.Errorf(codes.Unauthenticated, "redis: can't get sessionID:", key)
 		}
 		return "", err
 	}
