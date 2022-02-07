@@ -1,7 +1,7 @@
 version: 3
 
 auth:
-  session_key: "x-sessionID"
+  session_key: "x-session-id"
   logout_key: "logout"
 database:
   dsn: "host=%s port=%s dbname=%s user=%s password=%s sslmode=%s"
