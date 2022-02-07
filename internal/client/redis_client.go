@@ -28,7 +28,7 @@ func (c *redisClient) Delete(ctx context.Context, key string) error {
 }
 
 func (c *redisClient) Set(ctx context.Context, key, value string) error {
-	err := c.redisClient.Set(ctx, key, value, time.Hour*24).Err()
+	err := c.redisClient.SetEX(ctx, key, value, time.Hour*24).Err()
 	if err != nil {
 		return err
 	}
