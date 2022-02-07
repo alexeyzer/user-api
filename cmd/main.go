@@ -32,7 +32,7 @@ func serveSwagger(mux *http.ServeMux) {
 func gatewayMetadataAnnotator(_ context.Context, r *http.Request) metadata.MD {
 	SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
 	if ok == nil {
-		log.Println(SessionID, ok)
+		log.Info("add cookie to metadata:", config.Config.Auth.SessionKey, SessionID.Value)
 		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID.Value)
 	}
 	log.Println("No Cookie")
