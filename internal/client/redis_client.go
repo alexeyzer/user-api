@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"os"
 	"time"
 )
 
@@ -49,7 +50,7 @@ func (c *redisClient) Get(ctx context.Context, key string) (string, error) {
 func NewRedisClient(ctx context.Context) (RedisClient, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     config.Config.Redis.Host + ":" + config.Config.Redis.Port,
-		Password: config.Config.Redis.Password,
+		Password: os.Getenv(config.Config.Redis.Password),
 		DB:       0, // use default DB
 	})
 	err := rdb.Ping(ctx).Err()

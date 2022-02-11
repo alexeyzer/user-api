@@ -14,7 +14,7 @@ database:
 redis:
   host: "62.84.127.244"
   port: "6379"
-  password: ""
+  password: "password_redis"
 app:
   http_port: "8080"
   grpc_port: "8082"
