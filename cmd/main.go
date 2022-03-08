@@ -120,6 +120,10 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 		log.Fatal(err)
 	}()
 	log.Println("app started")
+	go func() {
+		err = http.ListenAndServe(":"+config.Config.App.HttpPort2, mux)
+		log.Fatal(err)
+	}()
 	err = http.ListenAndServeTLS(":"+config.Config.App.HttpPort, "./keys/server.crt", "./keys/server.key", mux)
 	return err
 }

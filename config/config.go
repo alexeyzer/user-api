@@ -26,8 +26,9 @@ type config struct {
 		Password string `yaml:"password"`
 	}
 	App struct {
-		HttpPort string `yaml:"http_port"`
-		GrpcPort string `yaml:"grpc_port"`
+		HttpPort2 string `yaml:"http_port2"`
+		HttpPort  string `yaml:"http_port"`
+		GrpcPort  string `yaml:"grpc_port"`
 	}
 }
 
