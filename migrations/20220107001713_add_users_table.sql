@@ -11,12 +11,10 @@ CREATE TABLE users(
     username varchar(200) not null
 );
 
-create unique INDEX users_username_uqidx on users(username);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-drop index users_username_uqidx;
 
 DROP TABLE users;
 -- +goose StatementEnd

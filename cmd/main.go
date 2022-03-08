@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net"
 	"net/http"
 	"time"
@@ -15,6 +16,7 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
 	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -95,12 +97,14 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 	}
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 		grpc_logrus.UnaryServerInterceptor(log.WithContext(ctx).WithTime(time.Time{})),
-		grpc_validator.UnaryServerInterceptor()),
-	))
+		grpc_validator.UnaryServerInterceptor(),
+		grpc_prometheus.UnaryServerInterceptor)),
+	)
 	gw.RegisterUserApiServiceServer(grpcServer, userApiServiceServer)
 
 	mux := http.NewServeMux()
 	gwmux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadataAnnotator), runtime.WithForwardResponseOption(httpResponseModifier))
+	mux.Handle("/metrics", promhttp.Handler())
 	mux.Handle("/", cors(gwmux))
 	serveSwagger(mux)
 	opts := []grpc.DialOption{
