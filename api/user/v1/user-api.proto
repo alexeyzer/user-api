@@ -19,7 +19,7 @@ import "validate/validate.proto";
      };
    };
 
-   rpc Login(LoginRequest) returns (LoginResponse) {
+   rpc Login(LoginRequest) returns (CreateUserResponse) {
      option (google.api.http) = {
        post: "/v1/login"
        body: "*"
@@ -40,11 +40,7 @@ import "validate/validate.proto";
      };
    };
 
-   rpc Echo(EchoRequest) returns (EchoResponse) {
-     option (google.api.http) = {
-       get: "/v1/echo"
-     };
-   };
+
  }
 
 
@@ -52,21 +48,9 @@ message SessionCheckResponse {
   string username = 1;
 }
 
- message EchoRequest {
-   string message = 1;
- }
-
-message EchoResponse {
-  string message = 1;
-}
-
 message LoginRequest {
   string email = 1 [(validate.rules).string.email = true];
   string password = 2 [(validate.rules).string = {min_len: 1, max_len: 600}];
-}
-
-message LoginResponse {
-  string session_id = 1;
 }
 
  message CreateUserRequest {

@@ -18,7 +18,7 @@ import (
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error)
 	GetBySession(ctx context.Context, sessionID string) (*repository.User, error)
-	Login(ctx context.Context, req *desc.LoginRequest) (*string, error)
+	Login(ctx context.Context, req *desc.LoginRequest) (*repository.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*string, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
@@ -38,6 +38,18 @@ func (s *userService) GetBySession(ctx context.Context, sessionID string) (*repo
 		return nil, err
 	}
 	return user, nil
+}
+
+func (s *userService) createSession(ctx context.Context, user *repository.User) error {
+	sessionID := uuid.New().String()
+	err := s.redis.Set(ctx, sessionID, user.Email)
+	if err != nil {
+		log.Warnf("failed to create sessionID for user = %s", user.Email)
+	}
+	if err := grpc.SetHeader(ctx, metadata.Pairs(config.Config.Auth.SessionKey, sessionID)); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *userService) DeleteSession(ctx context.Context, sessionID string) error {
@@ -63,7 +75,7 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*stri
 	return &email, nil
 }
 
-func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*string, error) {
+func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*repository.User, error) {
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -80,15 +92,12 @@ func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*strin
 		return nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
 	}
 
-	sessionID := uuid.New().String()
-	err = s.redis.Set(ctx, sessionID, user.Email)
+	err = s.createSession(ctx, user)
 	if err != nil {
-		log.Warnf("failed to create sessionID for user = %s", user.Email)
-	}
-	if err := grpc.SetHeader(ctx, metadata.Pairs(config.Config.Auth.SessionKey, sessionID)); err != nil {
 		return nil, err
 	}
-	return &sessionID, nil
+
+	return user, nil
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error) {
@@ -99,18 +108,20 @@ func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserReques
 	if exists == true {
 		return nil, status.Errorf(codes.InvalidArgument, "User with email = %s already exists", req.Email)
 	}
+
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
+
 	res, err := s.dao.UserQuery().Create(ctx, s.serviceUserReqToDaoUser(req, encryptedPassword))
 	if err != nil {
 		return nil, err
 	}
-	sessionID := uuid.New().String()
-	err = s.redis.Set(ctx, sessionID, res.Email)
+
+	err = s.createSession(ctx, res)
 	if err != nil {
-		log.Warnf("failed to create sessionID for user = %s", res.Email)
+		return nil, err
 	}
 
 	return res, nil

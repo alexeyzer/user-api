@@ -16,36 +16,6 @@
     "application/json"
   ],
   "paths": {
-    "/v1/echo": {
-      "get": {
-        "operationId": "userApiService_Echo",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiEchoResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "message",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "userApiService"
-        ]
-      }
-    },
     "/v1/login": {
       "post": {
         "operationId": "userApiService_Login",
@@ -53,7 +23,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiLoginResponse"
+              "$ref": "#/definitions/apiCreateUserResponse"
             }
           },
           "default": {
@@ -243,14 +213,6 @@
         }
       }
     },
-    "apiEchoResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "apiLoginRequest": {
       "type": "object",
       "properties": {
@@ -258,14 +220,6 @@
           "type": "string"
         },
         "password": {
-          "type": "string"
-        }
-      }
-    },
-    "apiLoginResponse": {
-      "type": "object",
-      "properties": {
-        "sessionId": {
           "type": "string"
         }
       }

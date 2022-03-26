@@ -21,10 +21,9 @@ const _ = grpc.SupportPackageIsVersion7
 type UserApiServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	GetUserBySession(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SessionCheck(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SessionCheckResponse, error)
-	Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 }
 
 type userApiServiceClient struct {
@@ -53,8 +52,8 @@ func (c *userApiServiceClient) GetUserBySession(ctx context.Context, in *emptypb
 	return out, nil
 }
 
-func (c *userApiServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	out := new(LoginResponse)
+func (c *userApiServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
 	err := c.cc.Invoke(ctx, "/user.api.userApiService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -80,25 +79,15 @@ func (c *userApiServiceClient) SessionCheck(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
-func (c *userApiServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
-	out := new(EchoResponse)
-	err := c.cc.Invoke(ctx, "/user.api.userApiService/Echo", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserApiServiceServer is the server API for UserApiService service.
 // All implementations must embed UnimplementedUserApiServiceServer
 // for forward compatibility
 type UserApiServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	GetUserBySession(context.Context, *emptypb.Empty) (*CreateUserResponse, error)
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	Login(context.Context, *LoginRequest) (*CreateUserResponse, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	SessionCheck(context.Context, *emptypb.Empty) (*SessionCheckResponse, error)
-	Echo(context.Context, *EchoRequest) (*EchoResponse, error)
 	mustEmbedUnimplementedUserApiServiceServer()
 }
 
@@ -112,7 +101,7 @@ func (UnimplementedUserApiServiceServer) CreateUser(context.Context, *CreateUser
 func (UnimplementedUserApiServiceServer) GetUserBySession(context.Context, *emptypb.Empty) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserBySession not implemented")
 }
-func (UnimplementedUserApiServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+func (UnimplementedUserApiServiceServer) Login(context.Context, *LoginRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedUserApiServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
@@ -120,9 +109,6 @@ func (UnimplementedUserApiServiceServer) Logout(context.Context, *emptypb.Empty)
 }
 func (UnimplementedUserApiServiceServer) SessionCheck(context.Context, *emptypb.Empty) (*SessionCheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SessionCheck not implemented")
-}
-func (UnimplementedUserApiServiceServer) Echo(context.Context, *EchoRequest) (*EchoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
 }
 func (UnimplementedUserApiServiceServer) mustEmbedUnimplementedUserApiServiceServer() {}
 
@@ -227,24 +213,6 @@ func _UserApiService_SessionCheck_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserApiService_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EchoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserApiServiceServer).Echo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.api.userApiService/Echo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserApiServiceServer).Echo(ctx, req.(*EchoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UserApiService_ServiceDesc is the grpc.ServiceDesc for UserApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -271,10 +239,6 @@ var UserApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SessionCheck",
 			Handler:    _UserApiService_SessionCheck_Handler,
-		},
-		{
-			MethodName: "Echo",
-			Handler:    _UserApiService_Echo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
