@@ -104,6 +104,8 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 
 	mux := http.NewServeMux()
 	gwmux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadataAnnotator), runtime.WithForwardResponseOption(httpResponseModifier))
+
+	grpc_prometheus.EnableHandlingTimeHistogram()
 	mux.Handle("/metrics", promhttp.Handler())
 	mux.Handle("/", cors(gwmux))
 	serveSwagger(mux)
