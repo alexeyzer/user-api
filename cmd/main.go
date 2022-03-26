@@ -104,8 +104,6 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 
 	mux := http.NewServeMux()
 	gwmux := runtime.NewServeMux(runtime.WithMetadata(gatewayMetadataAnnotator), runtime.WithForwardResponseOption(httpResponseModifier))
-
-	grpc_prometheus.EnableHandlingTimeHistogram()
 	mux.Handle("/metrics", promhttp.Handler())
 	mux.Handle("/", cors(gwmux))
 	serveSwagger(mux)
@@ -117,6 +115,10 @@ func RunServer(ctx context.Context, userApiServiceServer *user_serivce.UserApiSe
 	if err != nil {
 		return err
 	}
+
+	grpc_prometheus.Register(grpcServer)
+	grpc_prometheus.EnableHandlingTimeHistogram()
+
 	go func() {
 		err = grpcServer.Serve(grpcLis)
 		log.Fatal(err)
