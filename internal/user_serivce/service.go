@@ -19,17 +19,17 @@ type UserApiServiceServer struct {
 
 const adminRole = "admin"
 
-func (s *UserApiServiceServer) checkUserAdmin(ctx context.Context) bool {
+func (s *UserApiServiceServer) checkUserAdmin(ctx context.Context) (bool, error) {
 	res, err := s.SessionCheck(ctx, &emptypb.Empty{})
 	if err != nil {
-		return false
+		return false, err
 	}
 	for _, role := range res.UserRoles {
 		if role == adminRole {
-			return true
+			return true, nil
 		}
 	}
-	return false
+	return false, nil
 }
 
 func (s *UserApiServiceServer) GetSessionIDFromContext(ctx context.Context) string {

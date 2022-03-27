@@ -10,7 +10,10 @@ import (
 )
 
 func (s *UserApiServiceServer) CreateUserRole(ctx context.Context, req *desc.CreateUserRoleRequest) (*desc.CreateUserRoleResponse, error) {
-	access := s.checkUserAdmin(ctx)
+	access, err := s.checkUserAdmin(ctx)
+	if err != nil {
+		return nil, err
+	}
 	if !access {
 		return nil, status.Error(codes.PermissionDenied, "only for admins")
 	}

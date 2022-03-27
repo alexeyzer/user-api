@@ -9,12 +9,15 @@ import (
 )
 
 func (s *UserApiServiceServer) DeleteRole(ctx context.Context, req *desc.DeleteRoleRequest) (*emptypb.Empty, error) {
-	access := s.checkUserAdmin(ctx)
+	access, err := s.checkUserAdmin(ctx)
+	if err != nil {
+		return nil, err
+	}
 	if !access {
 		return nil, status.Error(codes.PermissionDenied, "only for admins")
 	}
 
-	err := s.roleService.DeleteRole(ctx, req.GetId())
+	err = s.roleService.DeleteRole(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
