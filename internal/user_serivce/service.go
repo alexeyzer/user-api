@@ -11,6 +11,7 @@ import (
 
 type UserApiServiceServer struct {
 	userService service.UserService
+	roleService service.RoleService
 	desc.UnimplementedUserApiServiceServer
 }
 
@@ -27,8 +28,9 @@ func (s *UserApiServiceServer) GetSessionIDFromContext(ctx context.Context) stri
 	return ""
 }
 
-func NewUserApiServiceServer(userService service.UserService) *UserApiServiceServer {
+func NewUserApiServiceServer(userService service.UserService, roleService service.RoleService) *UserApiServiceServer {
 	return &UserApiServiceServer{
 		userService: userService,
+		roleService: roleService,
 	}
 }

@@ -1,4 +1,4 @@
-package repository
+package datastruct
 
 const UserTableName = "users"
 

@@ -2,7 +2,7 @@ package user_serivce
 
 import (
 	"context"
-	"github.com/alexeyzer/user-api/internal/pkg/repository"
+	"github.com/alexeyzer/user-api/internal/pkg/datastruct"
 	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -20,7 +20,7 @@ func (s *UserApiServiceServer) CreateUser(ctx context.Context, req *desc.CreateU
 	return s.serviceCreateUserResponseToProtoCreateUserResponse(res), nil
 }
 
-func (s *UserApiServiceServer) serviceCreateUserResponseToProtoCreateUserResponse(res *repository.User) *desc.CreateUserResponse {
+func (s *UserApiServiceServer) serviceCreateUserResponseToProtoCreateUserResponse(res *datastruct.User) *desc.CreateUserResponse {
 	return &desc.CreateUserResponse{
 		Id:         res.ID,
 		Name:       res.Name,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/alexeyzer/user-api/config"
 	"github.com/alexeyzer/user-api/internal/client"
+	"github.com/alexeyzer/user-api/internal/pkg/datastruct"
 	"github.com/alexeyzer/user-api/internal/pkg/repository"
 	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
 	"github.com/google/uuid"
@@ -16,9 +17,9 @@ import (
 )
 
 type UserService interface {
-	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error)
-	GetBySession(ctx context.Context, sessionID string) (*repository.User, error)
-	Login(ctx context.Context, req *desc.LoginRequest) (*repository.User, error)
+	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error)
+	GetBySession(ctx context.Context, sessionID string) (*datastruct.User, error)
+	Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*string, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
@@ -28,7 +29,7 @@ type userService struct {
 	redis client.RedisClient
 }
 
-func (s *userService) GetBySession(ctx context.Context, sessionID string) (*repository.User, error) {
+func (s *userService) GetBySession(ctx context.Context, sessionID string) (*datastruct.User, error) {
 	email, err := s.SessionCheck(ctx, sessionID)
 	if err != nil {
 		return nil, err
@@ -40,7 +41,7 @@ func (s *userService) GetBySession(ctx context.Context, sessionID string) (*repo
 	return user, nil
 }
 
-func (s *userService) createSession(ctx context.Context, user *repository.User) error {
+func (s *userService) createSession(ctx context.Context, user *datastruct.User) error {
 	sessionID := uuid.New().String()
 	err := s.redis.Set(ctx, sessionID, user.Email)
 	if err != nil {
@@ -75,7 +76,7 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*stri
 	return &email, nil
 }
 
-func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*repository.User, error) {
+func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error) {
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -100,7 +101,7 @@ func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*repos
 	return user, nil
 }
 
-func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*repository.User, error) {
+func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error) {
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -127,8 +128,8 @@ func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserReques
 	return res, nil
 }
 
-func (s *userService) serviceUserReqToDaoUser(req *desc.CreateUserRequest, password []byte) repository.User {
-	return repository.User{
+func (s *userService) serviceUserReqToDaoUser(req *desc.CreateUserRequest, password []byte) datastruct.User {
+	return datastruct.User{
 		Name:       req.Name,
 		Password:   password,
 		Surname:    req.Surname,

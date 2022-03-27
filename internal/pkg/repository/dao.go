@@ -9,9 +9,11 @@ import (
 
 type DAO interface {
 	UserQuery() UserQuery
+	RoleQuery() RoleQuery
 }
 
 type dao struct {
+	roleQuery RoleQuery
 	userQuery UserQuery
 	db        *sqlx.DB
 }
@@ -37,6 +39,13 @@ func NewDao() (DAO, error) {
 	}
 	dao.db = conn
 	return dao, nil
+}
+
+func (d *dao) RoleQuery() RoleQuery {
+	if d.roleQuery == nil {
+		d.roleQuery = NewRoleQuery(d.db)
+	}
+	return d.roleQuery
 }
 
 func (d *dao) UserQuery() UserQuery {

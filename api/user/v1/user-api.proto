@@ -40,12 +40,64 @@ import "validate/validate.proto";
      };
    };
 
+   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
+     option (google.api.http) = {
+       post: "/v1/role"
+       body: "*"
+     };
+   };
+
+   rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+       delete: "/v1/role"
+     };
+   };
+
+   rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
+     option (google.api.http) = {
+       get: "/v1/role"
+     };
+   };
+
+   rpc ListRoles(google.protobuf.Empty) returns (ListRolesResponse) {
+     option (google.api.http) = {
+       get: "/v1/role/list"
+     };
+   };
 
  }
 
+ message DeleteRoleRequest {
+   int64 id = 1;
+ }
+
+ message CreateRoleRequest {
+   string name = 1;
+   string description = 2;
+ }
+
+ message CreateRoleResponse {
+   int64 id = 1;
+   string name = 2;
+   string description = 3;
+ }
+
+ message GetRoleRequest {
+   int64 id = 1;
+ }
+
+ message GetRoleResponse {
+   int64 id = 1;
+   string name = 2;
+   string description = 3;
+ }
 
 message SessionCheckResponse {
   string username = 1;
+}
+
+message ListRolesResponse {
+   repeated GetRoleResponse roles = 1;
 }
 
 message LoginRequest {

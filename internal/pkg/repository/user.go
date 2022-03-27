@@ -4,12 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"github.com/Masterminds/squirrel"
+	"github.com/alexeyzer/user-api/internal/pkg/datastruct"
 	"github.com/jmoiron/sqlx"
 )
 
 type UserQuery interface {
-	Create(ctx context.Context, req User) (*User, error)
-	Get(ctx context.Context, email string) (*User, error)
+	Create(ctx context.Context, req datastruct.User) (*datastruct.User, error)
+	Get(ctx context.Context, email string) (*datastruct.User, error)
 	Exists(ctx context.Context, email string) (bool, error)
 }
 
@@ -18,8 +19,8 @@ type userQuery struct {
 	db      *sqlx.DB
 }
 
-func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
-	qb := q.builder.Insert(UserTableName).
+func (q *userQuery) Create(ctx context.Context, req datastruct.User) (*datastruct.User, error) {
+	qb := q.builder.Insert(datastruct.UserTableName).
 		Columns(
 			"name",
 			"surname",
@@ -42,7 +43,7 @@ func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
 		return nil, err
 	}
 
-	var user User
+	var user datastruct.User
 
 	err = q.db.GetContext(ctx, &user, query, args...)
 	if err != nil {
@@ -52,17 +53,17 @@ func (q *userQuery) Create(ctx context.Context, req User) (*User, error) {
 	return &user, nil
 }
 
-func (q *userQuery) Get(ctx context.Context, email string) (*User, error) {
+func (q *userQuery) Get(ctx context.Context, email string) (*datastruct.User, error) {
 	qb := q.builder.
 		Select("*").
-		From(UserTableName).
+		From(datastruct.UserTableName).
 		Where(squirrel.Eq{"email": email})
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return nil, err
 	}
 
-	var user User
+	var user datastruct.User
 
 	err = q.db.GetContext(ctx, &user, query, args...)
 	if err != nil {
@@ -75,14 +76,14 @@ func (q *userQuery) Get(ctx context.Context, email string) (*User, error) {
 func (q *userQuery) Exists(ctx context.Context, username string) (bool, error) {
 	qb := q.builder.
 		Select("*").
-		From(UserTableName).
+		From(datastruct.UserTableName).
 		Where(squirrel.Eq{"email": username})
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return false, err
 	}
 
-	var user User
+	var user datastruct.User
 
 	err = q.db.GetContext(ctx, &user, query, args...)
 	if err != nil {

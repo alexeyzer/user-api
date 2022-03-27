@@ -34,10 +34,9 @@ func serveSwagger(mux *http.ServeMux) {
 func gatewayMetadataAnnotator(_ context.Context, r *http.Request) metadata.MD {
 	SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
 	if ok == nil {
-		log.Info("add cookie to metadata:", config.Config.Auth.SessionKey, SessionID.Value)
+		log.Debug("add cookie to metadata:", config.Config.Auth.SessionKey, SessionID.Value)
 		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID.Value)
 	}
-	log.Println("No Cookie")
 	return metadata.Pairs()
 }
 
@@ -153,8 +152,9 @@ func main() {
 	}
 
 	userService := service.NewUserService(dao, redis)
+	roleService := service.NewRoleService(dao)
 
-	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService)
+	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService)
 	if err := RunServer(ctx, userApiServiceServer); err != nil {
 		log.Fatal(err)
 	}
