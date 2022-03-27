@@ -153,8 +153,9 @@ func main() {
 
 	userService := service.NewUserService(dao, redis)
 	roleService := service.NewRoleService(dao)
+	userRoleService := service.NewUserRoleService(dao)
 
-	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService)
+	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService, userRoleService)
 	if err := RunServer(ctx, userApiServiceServer); err != nil {
 		log.Fatal(err)
 	}

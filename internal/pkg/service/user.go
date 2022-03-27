@@ -18,27 +18,14 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error)
-	GetBySession(ctx context.Context, sessionID string) (*datastruct.User, error)
 	Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error)
-	SessionCheck(ctx context.Context, sessionID string) (*string, error)
+	SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
 
 type userService struct {
 	dao   repository.DAO
 	redis client.RedisClient
-}
-
-func (s *userService) GetBySession(ctx context.Context, sessionID string) (*datastruct.User, error) {
-	email, err := s.SessionCheck(ctx, sessionID)
-	if err != nil {
-		return nil, err
-	}
-	user, err := s.dao.UserQuery().Get(ctx, *email)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
 }
 
 func (s *userService) createSession(ctx context.Context, user *datastruct.User) error {
@@ -67,13 +54,23 @@ func (s *userService) DeleteSession(ctx context.Context, sessionID string) error
 	return nil
 }
 
-func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*string, error) {
-
+func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error) {
+	resp := &datastruct.UserWithRoles{}
 	email, err := s.redis.Get(ctx, sessionID)
 	if err != nil {
 		return nil, err
 	}
-	return &email, nil
+	resp.Email = email
+	user, err := s.dao.UserQuery().Get(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+	roles, err := s.dao.UserRoleQuery().List(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	resp.Roles = roles
+	return resp, nil
 }
 
 func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error) {

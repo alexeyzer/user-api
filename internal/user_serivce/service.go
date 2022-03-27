@@ -7,12 +7,29 @@ import (
 	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type UserApiServiceServer struct {
-	userService service.UserService
-	roleService service.RoleService
+	userService     service.UserService
+	roleService     service.RoleService
+	userRoleService service.UserRoleService
 	desc.UnimplementedUserApiServiceServer
+}
+
+const adminRole = "admin"
+
+func (s *UserApiServiceServer) checkUserAdmin(ctx context.Context) bool {
+	res, err := s.SessionCheck(ctx, &emptypb.Empty{})
+	if err != nil {
+		return false
+	}
+	for _, role := range res.UserRoles {
+		if role == adminRole {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *UserApiServiceServer) GetSessionIDFromContext(ctx context.Context) string {
@@ -28,9 +45,14 @@ func (s *UserApiServiceServer) GetSessionIDFromContext(ctx context.Context) stri
 	return ""
 }
 
-func NewUserApiServiceServer(userService service.UserService, roleService service.RoleService) *UserApiServiceServer {
+func NewUserApiServiceServer(
+	userService service.UserService,
+	roleService service.RoleService,
+	userRoleService service.UserRoleService,
+) *UserApiServiceServer {
 	return &UserApiServiceServer{
-		userService: userService,
-		roleService: roleService,
+		userService:     userService,
+		roleService:     roleService,
+		userRoleService: userRoleService,
 	}
 }

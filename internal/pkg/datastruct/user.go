@@ -11,3 +11,8 @@ type User struct {
 	Phone      string `db:"phone"`
 	Email      string `db:"email"`
 }
+
+type UserWithRoles struct {
+	Email string
+	Roles []string
+}

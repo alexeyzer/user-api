@@ -13,11 +13,6 @@ import "validate/validate.proto";
       body: "*"
     };
   };
-   rpc GetUserBySession(google.protobuf.Empty) returns (CreateUserResponse) {
-     option (google.api.http) = {
-       get: "/v1/user"
-     };
-   };
 
    rpc Login(LoginRequest) returns (CreateUserResponse) {
      option (google.api.http) = {
@@ -65,6 +60,63 @@ import "validate/validate.proto";
      };
    };
 
+   rpc CreateUserRole(CreateUserRoleRequest) returns (CreateUserRoleResponse) {
+     option (google.api.http) = {
+       post: "/v1/user-role"
+       body: "*"
+     };
+   };
+
+   rpc GetUserRole(GetUserRoleRequest) returns (GetUserRoleResponse) {
+     option (google.api.http) = {
+       get: "/v1/user-role"
+     };
+   };
+
+   rpc DeleteUserRole(DeleteUserRoleRequest) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+       delete: "/v1/user-role"
+     };
+   };
+
+   rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse) {
+     option (google.api.http) = {
+       get: "/v1/user-role/list"
+     };
+   };
+ }
+
+message ListUserRolesResponse {
+   repeated string user_roles = 1;
+}
+
+ message ListUserRolesRequest {
+   int64 user_id = 1;
+ }
+
+ message DeleteUserRoleRequest {
+   int64 id = 1;
+ }
+
+message GetUserRoleRequest {
+   int64 id = 1;
+}
+
+message GetUserRoleResponse {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 role_id = 3;
+}
+
+ message CreateUserRoleResponse {
+   int64 id = 1;
+   int64 user_id = 2;
+   int64 role_id = 3;
+ }
+
+ message CreateUserRoleRequest {
+   int64 user_id = 1;
+   int64 role_id = 2;
  }
 
  message DeleteRoleRequest {
@@ -93,7 +145,8 @@ import "validate/validate.proto";
  }
 
 message SessionCheckResponse {
-  string username = 1;
+  string email = 1;
+  repeated string user_roles = 2;
 }
 
 message ListRolesResponse {
