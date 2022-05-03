@@ -19,3 +19,5 @@ app:
   http_port2: "8079"
   http_port: "8080"
   grpc_port: "8082"
+grpc:
+  product_api: "51.250.69.184:8082"

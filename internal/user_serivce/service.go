@@ -14,6 +14,8 @@ type UserApiServiceServer struct {
 	userService     service.UserService
 	roleService     service.RoleService
 	userRoleService service.UserRoleService
+	cartService     service.CartService
+	orderService    service.OrderService
 	desc.UnimplementedUserApiServiceServer
 }
 
@@ -49,10 +51,14 @@ func NewUserApiServiceServer(
 	userService service.UserService,
 	roleService service.RoleService,
 	userRoleService service.UserRoleService,
+	cartService service.CartService,
+	orderService service.OrderService,
 ) *UserApiServiceServer {
 	return &UserApiServiceServer{
 		userService:     userService,
 		roleService:     roleService,
 		userRoleService: userRoleService,
+		orderService:    orderService,
+		cartService:     cartService,
 	}
 }

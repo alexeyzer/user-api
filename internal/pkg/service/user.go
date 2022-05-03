@@ -55,12 +55,10 @@ func (s *userService) DeleteSession(ctx context.Context, sessionID string) error
 }
 
 func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error) {
-	resp := &datastruct.UserWithRoles{}
 	email, err := s.redis.Get(ctx, sessionID)
 	if err != nil {
 		return nil, err
 	}
-	resp.Email = email
 	user, err := s.dao.UserQuery().Get(ctx, email)
 	if err != nil {
 		return nil, err
@@ -69,8 +67,12 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 	if err != nil {
 		return nil, err
 	}
-	resp.Roles = roles
-	return resp, nil
+
+	return &datastruct.UserWithRoles{
+		ID:    user.ID,
+		Email: user.Email,
+		Roles: roles,
+	}, nil
 }
 
 func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error) {
@@ -79,7 +81,7 @@ func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*datas
 		return nil, err
 	}
 	if exists == false {
-		return nil, status.Errorf(codes.InvalidArgument, "User with username = %s doesn't exist", req.Email)
+		return nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
 	}
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {

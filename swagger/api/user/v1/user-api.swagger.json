@@ -16,6 +16,111 @@
     "application/json"
   ],
   "paths": {
+    "/v1/cart": {
+      "delete": {
+        "operationId": "userApiService_DeleteFromCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      },
+      "post": {
+        "operationId": "userApiService_AddToCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiAddToCartResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiAddToCartRequest"
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/cart/all": {
+      "delete": {
+        "operationId": "userApiService_deleteAllFromCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/cart/list": {
+      "get": {
+        "operationId": "userApiService_ListCartItems",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListCartItemsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "userApiService_Login",
@@ -75,6 +180,50 @@
             }
           }
         ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/order": {
+      "post": {
+        "operationId": "userApiService_CreateOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/order/list": {
+      "get": {
+        "operationId": "userApiService_ListOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "userApiService"
         ]
@@ -379,6 +528,70 @@
     }
   },
   "definitions": {
+    "apiAddToCartRequest": {
+      "type": "object",
+      "properties": {
+        "finalProductId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiAddToCartResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "finalProductId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiCreateOrderResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "orderStatus": {
+          "$ref": "#/definitions/apiOrderStatus"
+        },
+        "orderDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "totalPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apifullCartItem"
+          }
+        }
+      }
+    },
     "apiCreateRoleRequest": {
       "type": "object",
       "properties": {
@@ -514,6 +727,28 @@
         }
       }
     },
+    "apiListCartItemsResponse": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apifullCartItem"
+          }
+        }
+      }
+    },
+    "apiListOrderResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiCreateOrderResponse"
+          }
+        }
+      }
+    },
     "apiListRolesResponse": {
       "type": "object",
       "properties": {
@@ -547,6 +782,15 @@
         }
       }
     },
+    "apiOrderStatus": {
+      "type": "string",
+      "enum": [
+        "CREATED",
+        "DONE",
+        "DECLINED"
+      ],
+      "default": "CREATED"
+    },
     "apiSessionCheckResponse": {
       "type": "object",
       "properties": {
@@ -558,6 +802,56 @@
           "items": {
             "type": "string"
           }
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apifullCartItem": {
+      "type": "object",
+      "properties": {
+        "fullProductId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "brandName": {
+          "type": "string"
+        },
+        "categoryName": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "double"
+        },
+        "size": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "userQuantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

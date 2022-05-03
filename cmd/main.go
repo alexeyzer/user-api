@@ -151,11 +151,15 @@ func main() {
 		log.Fatal("Failed to connect to redis db: ", err)
 	}
 
+	productAPIClient, err := client.NewProductApiClient(config.Config.GRPC.ProductAPI)
+
 	userService := service.NewUserService(dao, redis)
 	roleService := service.NewRoleService(dao)
 	userRoleService := service.NewUserRoleService(dao)
+	cartService := service.NewCartService(dao, productAPIClient)
+	orderService := service.NewOrderService(dao, cartService)
 
-	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService, userRoleService)
+	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService, userRoleService, cartService, orderService)
 	if err := RunServer(ctx, userApiServiceServer); err != nil {
 		log.Fatal(err)
 	}

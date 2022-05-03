@@ -11,12 +11,16 @@ type DAO interface {
 	UserQuery() UserQuery
 	RoleQuery() RoleQuery
 	UserRoleQuery() UserRoleQuery
+	CartQuery() CartQuery
+	OrderQuery() OrderQuery
 }
 
 type dao struct {
 	userRoleQuery UserRoleQuery
 	roleQuery     RoleQuery
 	userQuery     UserQuery
+	cartQuery     CartQuery
+	orderQuery    OrderQuery
 	db            *sqlx.DB
 }
 
@@ -41,6 +45,20 @@ func NewDao() (DAO, error) {
 	}
 	dao.db = conn
 	return dao, nil
+}
+
+func (d *dao) OrderQuery() OrderQuery {
+	if d.orderQuery == nil {
+		d.orderQuery = NewOrderQuery(d.db)
+	}
+	return d.orderQuery
+}
+
+func (d *dao) CartQuery() CartQuery {
+	if d.cartQuery == nil {
+		d.cartQuery = NewCartQuery(d.db)
+	}
+	return d.cartQuery
 }
 
 func (d *dao) RoleQuery() RoleQuery {

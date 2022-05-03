@@ -13,6 +13,7 @@ type User struct {
 }
 
 type UserWithRoles struct {
+	ID    int64
 	Email string
 	Roles []string
 }
