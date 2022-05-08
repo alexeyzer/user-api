@@ -32,10 +32,10 @@ func serveSwagger(mux *http.ServeMux) {
 
 // look up session and pass sessionId in to context if it exists
 func gatewayMetadataAnnotator(_ context.Context, r *http.Request) metadata.MD {
-	SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
-	if ok == nil {
-		log.Debug("add cookie to metadata:", config.Config.Auth.SessionKey, SessionID.Value)
-		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID.Value)
+	//SessionID, ok := r.Cookie(config.Config.Auth.SessionKey)
+	SessionID := r.Header.Get(config.Config.Auth.SessionKey)
+	if SessionID == "" {
+		return metadata.Pairs(config.Config.Auth.SessionKey, SessionID)
 	}
 	return metadata.Pairs()
 }
@@ -50,25 +50,26 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 	logout := md.HeaderMD.Get(config.Config.Auth.LogoutKey)
 	if len(sessionID) > 0 {
 		if len(logout) == 0 {
-			http.SetCookie(w, &http.Cookie{
-				Name:     config.Config.Auth.SessionKey,
-				Value:    sessionID[0],
-				Path:     "/",
-				HttpOnly: true,
-				Expires:  time.Now().Add(time.Hour * 24),
-				SameSite: http.SameSiteNoneMode,
-				Secure:   true,
-			})
+			w.Header().Set(config.Config.Auth.SessionKey, sessionID[0])
+			//http.SetCookie(w, &http.Cookie{
+			//	Name:     config.Config.Auth.SessionKey,
+			//	Value:    sessionID[0],
+			//	Path:     "/",
+			//	HttpOnly: true,
+			//	Expires:  time.Now().Add(time.Hour * 24),
+			//	SameSite: http.SameSiteNoneMode,
+			//	Secure:   true,
+			//})
 		} else {
-			http.SetCookie(w, &http.Cookie{
-				Name:     config.Config.Auth.SessionKey,
-				Value:    sessionID[0],
-				Path:     "/",
-				HttpOnly: true,
-				Expires:  time.Now().Add(time.Duration(-1) * time.Hour * 24),
-				SameSite: http.SameSiteNoneMode,
-				Secure:   true,
-			})
+			//http.SetCookie(w, &http.Cookie{
+			//	Name:     config.Config.Auth.SessionKey,
+			//	Value:    sessionID[0],
+			//	Path:     "/",
+			//	HttpOnly: true,
+			//	Expires:  time.Now().Add(time.Duration(-1) * time.Hour * 24),
+			//	SameSite: http.SameSiteNoneMode,
+			//	Secure:   true,
+			//})
 		}
 	}
 	return nil

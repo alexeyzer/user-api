@@ -11,8 +11,9 @@ type config struct {
 		ProductAPI string `yaml:"product_api"`
 	}
 	Auth struct {
-		SessionKey string `yaml:"session_key"`
-		LogoutKey  string `yaml:"logout_key"`
+		HeaderSessionKey string `yaml:"header_session_key"`
+		SessionKey       string `yaml:"session_key"`
+		LogoutKey        string `yaml:"logout_key"`
 	}
 	Database struct {
 		Dsn      string `yaml:"dsn"`

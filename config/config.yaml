@@ -1,6 +1,7 @@
 version: 3
 
 auth:
+  header_session_key: "session-id"
   session_key: "x-session-id"
   logout_key: "logout"
 database:
