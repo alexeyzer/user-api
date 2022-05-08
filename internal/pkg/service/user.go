@@ -18,7 +18,7 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error)
-	Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error)
+	Login(ctx context.Context, req *desc.LoginRequest) (string, *datastruct.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
@@ -28,16 +28,16 @@ type userService struct {
 	redis client.RedisClient
 }
 
-func (s *userService) createSession(ctx context.Context, user *datastruct.User) error {
+func (s *userService) createSession(ctx context.Context, user *datastruct.User) (string, error) {
 	sessionID := uuid.New().String()
 	err := s.redis.Set(ctx, sessionID, user.Email)
 	if err != nil {
 		log.Warnf("failed to create sessionID for user = %s", user.Email)
 	}
 	if err := grpc.SetHeader(ctx, metadata.Pairs(config.Config.Auth.SessionKey, sessionID)); err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return sessionID, nil
 }
 
 func (s *userService) DeleteSession(ctx context.Context, sessionID string) error {
@@ -75,29 +75,29 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 	}, nil
 }
 
-func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (*datastruct.User, error) {
+func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (string, *datastruct.User, error) {
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	if exists == false {
-		return nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
+		return "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
 	}
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(req.Password))
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
+		return "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
 	}
 
-	err = s.createSession(ctx, user)
+	sessionID, err := s.createSession(ctx, user)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
-	return user, nil
+	return sessionID, user, nil
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error) {
@@ -115,11 +115,6 @@ func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserReques
 	}
 
 	res, err := s.dao.UserQuery().Create(ctx, s.serviceUserReqToDaoUser(req, encryptedPassword))
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.createSession(ctx, res)
 	if err != nil {
 		return nil, err
 	}

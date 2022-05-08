@@ -128,7 +128,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiCreateUserResponse"
+              "$ref": "#/definitions/apiLoginResponse"
             }
           },
           "default": {
@@ -782,12 +782,39 @@
         }
       }
     },
+    "apiLoginResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "patronymic": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "session": {
+          "type": "string"
+        }
+      }
+    },
     "apiOrderStatus": {
       "type": "string",
       "enum": [
         "CREATED",
-        "DONE",
-        "DECLINED"
+        "DECLINED",
+        "DONE"
       ],
       "default": "CREATED"
     },

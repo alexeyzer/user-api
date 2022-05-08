@@ -50,7 +50,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, _ proto.Me
 	logout := md.HeaderMD.Get(config.Config.Auth.LogoutKey)
 	if len(sessionID) > 0 {
 		if len(logout) == 0 {
-			w.Header().Set(config.Config.Auth.SessionKey, sessionID[0])
+			//w.Header().Set(config.Config.Auth.SessionKey, sessionID[0])
 			//http.SetCookie(w, &http.Cookie{
 			//	Name:     config.Config.Auth.SessionKey,
 			//	Value:    sessionID[0],

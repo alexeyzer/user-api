@@ -15,7 +15,7 @@ import "validate/validate.proto";
     };
   };
 
-   rpc Login(LoginRequest) returns (CreateUserResponse) {
+   rpc Login(LoginRequest) returns (LoginResponse) {
      option (google.api.http) = {
        post: "/v1/login"
        body: "*"
@@ -268,4 +268,14 @@ message LoginRequest {
    string patronymic = 4;
    string phone = 5;
    string email = 6;
+ }
+
+ message LoginResponse {
+   int64 id = 1;
+   string name = 2;
+   string surname = 3;
+   string patronymic = 4;
+   string phone = 5;
+   string email = 6;
+   string session = 7;
  }
