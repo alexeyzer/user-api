@@ -22,6 +22,7 @@ import "validate/validate.proto";
      };
    };
 
+
    rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
      option (google.api.http) = {
        post: "/v1/logout"
@@ -278,4 +279,5 @@ message LoginRequest {
    string phone = 5;
    string email = 6;
    string session = 7;
+   bool access_to_admin_panel = 8;
  }

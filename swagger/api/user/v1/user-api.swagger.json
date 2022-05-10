@@ -806,6 +806,9 @@
         },
         "session": {
           "type": "string"
+        },
+        "accessToAdminPanel": {
+          "type": "boolean"
         }
       }
     },

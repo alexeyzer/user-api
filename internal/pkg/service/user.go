@@ -18,7 +18,7 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error)
-	Login(ctx context.Context, req *desc.LoginRequest) (string, *datastruct.User, error)
+	Login(ctx context.Context, req *desc.LoginRequest) (bool, string, *datastruct.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error)
 	DeleteSession(ctx context.Context, sessionID string) error
 }
@@ -75,29 +75,39 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 	}, nil
 }
 
-func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (string, *datastruct.User, error) {
+func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (bool, string, *datastruct.User, error) {
+	accessAdminPage := false
+
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
-		return "", nil, err
+		return accessAdminPage, "", nil, err
 	}
 	if exists == false {
-		return "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
+		return accessAdminPage, "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
 	}
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
-		return "", nil, err
+		return accessAdminPage, "", nil, err
 	}
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(req.Password))
 	if err != nil {
-		return "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
+		return accessAdminPage, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
 	}
 
 	sessionID, err := s.createSession(ctx, user)
 	if err != nil {
-		return "", nil, err
+		return accessAdminPage, "", nil, err
 	}
 
-	return sessionID, user, nil
+	roles, err := s.dao.UserRoleQuery().List(ctx, user.ID)
+	if err != nil {
+		return accessAdminPage, "", nil, err
+	}
+	if len(roles) > 0 {
+		accessAdminPage = true
+	}
+
+	return accessAdminPage, sessionID, user, nil
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error) {

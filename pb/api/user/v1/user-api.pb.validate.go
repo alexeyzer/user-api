@@ -2960,6 +2960,8 @@ func (m *LoginResponse) validate(all bool) error {
 
 	// no validation rules for Session
 
+	// no validation rules for AccessToAdminPanel
+
 	if len(errors) > 0 {
 		return LoginResponseMultiError(errors)
 	}
