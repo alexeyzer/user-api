@@ -21,11 +21,29 @@ type UserService interface {
 	Login(ctx context.Context, req *desc.LoginRequest) (bool, string, *datastruct.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error)
 	DeleteSession(ctx context.Context, sessionID string) error
+	GetUser(ctx context.Context, ID int64) (*datastruct.User, error)
+	ListUsers(ctx context.Context) ([]*datastruct.User, error)
 }
 
 type userService struct {
 	dao   repository.DAO
 	redis client.RedisClient
+}
+
+func (s *userService) GetUser(ctx context.Context, ID int64) (*datastruct.User, error) {
+	resp, err := s.dao.UserQuery().GetByID(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (s *userService) ListUsers(ctx context.Context) ([]*datastruct.User, error) {
+	resp, err := s.dao.UserQuery().List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (s *userService) createSession(ctx context.Context, user *datastruct.User) (string, error) {

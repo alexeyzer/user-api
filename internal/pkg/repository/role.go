@@ -10,6 +10,7 @@ import (
 
 type RoleQuery interface {
 	Create(ctx context.Context, req datastruct.Role) (*datastruct.Role, error)
+	Update(ctx context.Context, req datastruct.Role) (*datastruct.Role, error)
 	Get(ctx context.Context, ID int64) (*datastruct.Role, error)
 	Exists(ctx context.Context, name string) (bool, error)
 	List(ctx context.Context) ([]*datastruct.Role, error)
@@ -19,6 +20,27 @@ type RoleQuery interface {
 type roleQuery struct {
 	builder squirrel.StatementBuilderType
 	db      *sqlx.DB
+}
+
+func (q *roleQuery) Update(ctx context.Context, req datastruct.Role) (*datastruct.Role, error) {
+	qb := q.builder.Update(datastruct.RoleTableName).
+		Set("name", req.Name).
+		Set("description", req.Description).
+		Where(squirrel.Eq{"id": req.ID}).
+		Suffix("RETURNING *")
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var role datastruct.Role
+
+	err = q.db.GetContext(ctx, &role, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &role, nil
 }
 
 func (q *roleQuery) Delete(ctx context.Context, ID int64) error {

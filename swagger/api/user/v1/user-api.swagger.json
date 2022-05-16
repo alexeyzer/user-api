@@ -317,6 +317,36 @@
         "tags": [
           "userApiService"
         ]
+      },
+      "put": {
+        "operationId": "userApiService_UpdateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateRoleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateRoleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
       }
     },
     "/v1/role/list": {
@@ -374,6 +404,35 @@
       }
     },
     "/v1/user": {
+      "get": {
+        "operationId": "userApiService_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      },
       "post": {
         "operationId": "userApiService_CreateUser",
         "responses": {
@@ -521,6 +580,28 @@
             "format": "int64"
           }
         ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/user/list": {
+      "get": {
+        "operationId": "userApiService_ListUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListUsersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "userApiService"
         ]
@@ -771,6 +852,17 @@
         }
       }
     },
+    "apiListUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiCreateUserResponse"
+          }
+        }
+      }
+    },
     "apiLoginRequest": {
       "type": "object",
       "properties": {
@@ -836,6 +928,36 @@
         "userId": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "apiUpdateRoleRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "apiUpdateRoleResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
         }
       }
     },

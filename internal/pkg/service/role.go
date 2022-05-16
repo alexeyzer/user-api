@@ -13,6 +13,7 @@ import (
 
 type RoleService interface {
 	CreateRole(ctx context.Context, req datastruct.Role) (*datastruct.Role, error)
+	UpdateRole(ctx context.Context, req datastruct.Role) (*datastruct.Role, error)
 	GetRole(ctx context.Context, ID int64) (*datastruct.Role, error)
 	DeleteRole(ctx context.Context, ID int64) error
 	ListRoles(ctx context.Context) ([]*datastruct.Role, error)
@@ -20,6 +21,19 @@ type RoleService interface {
 
 type roleService struct {
 	dao repository.DAO
+}
+
+func (s *roleService) UpdateRole(ctx context.Context, req datastruct.Role) (*datastruct.Role, error) {
+	_, err := s.dao.RoleQuery().Get(ctx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.dao.RoleQuery().Update(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (s *roleService) ListRoles(ctx context.Context) ([]*datastruct.Role, error) {

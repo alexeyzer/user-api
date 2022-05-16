@@ -15,6 +15,18 @@ import "validate/validate.proto";
     };
   };
 
+   rpc ListUsers(google.protobuf.Empty) returns (ListUsersResponse) {
+     option (google.api.http) = {
+       get: "/v1/user/list"
+     };
+   };
+
+   rpc GetUser(GetUserRequest) returns (CreateUserResponse) {
+     option (google.api.http) = {
+       get: "/v1/user"
+     };
+   };
+
    rpc Login(LoginRequest) returns (LoginResponse) {
      option (google.api.http) = {
        post: "/v1/login"
@@ -40,6 +52,12 @@ import "validate/validate.proto";
    rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
      option (google.api.http) = {
        post: "/v1/role"
+       body: "*"
+     };
+   };
+   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
+     option (google.api.http) = {
+       put: "/v1/role"
        body: "*"
      };
    };
@@ -124,6 +142,22 @@ import "validate/validate.proto";
      };
    };
  }
+
+ message GetUserRequest {
+   int64 id = 1;
+ }
+
+message UpdateRoleRequest {
+ int64 id = 1;
+ string name = 2;
+ string description = 3;
+}
+
+message UpdateRoleResponse {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+}
 
  message ListOrderResponse {
    repeated CreateOrderResponse orders= 1;
@@ -260,6 +294,10 @@ message LoginRequest {
     string patronymic = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
     string phone = 5;
     string email = 6 [(validate.rules).string.email = true];
+ }
+
+ message ListUsersResponse {
+   repeated CreateUserResponse users = 1;
  }
 
  message CreateUserResponse {

@@ -11,12 +11,33 @@ import (
 type UserQuery interface {
 	Create(ctx context.Context, req datastruct.User) (*datastruct.User, error)
 	Get(ctx context.Context, email string) (*datastruct.User, error)
+	GetByID(ctx context.Context, ID int64) (*datastruct.User, error)
 	Exists(ctx context.Context, email string) (bool, error)
+	List(ctx context.Context) ([]*datastruct.User, error)
 }
 
 type userQuery struct {
 	builder squirrel.StatementBuilderType
 	db      *sqlx.DB
+}
+
+func (q *userQuery) List(ctx context.Context) ([]*datastruct.User, error) {
+	qb := q.builder.
+		Select("*").
+		From(datastruct.UserTableName)
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var users []*datastruct.User
+
+	err = q.db.SelectContext(ctx, &users, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 func (q *userQuery) Create(ctx context.Context, req datastruct.User) (*datastruct.User, error) {
@@ -38,6 +59,26 @@ func (q *userQuery) Create(ctx context.Context, req datastruct.User) (*datastruc
 			req.Email,
 		).
 		Suffix("RETURNING *")
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var user datastruct.User
+
+	err = q.db.GetContext(ctx, &user, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (q *userQuery) GetByID(ctx context.Context, ID int64) (*datastruct.User, error) {
+	qb := q.builder.
+		Select("*").
+		From(datastruct.UserTableName).
+		Where(squirrel.Eq{"id": ID})
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return nil, err
