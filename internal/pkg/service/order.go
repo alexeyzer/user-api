@@ -35,6 +35,9 @@ func (s *orderService) CreateOrder(ctx context.Context, userID int64) (*datastru
 		Items:       make([]*datastruct.FullCartItem, 0, len(cartItems)),
 	}
 	for _, item := range cartItems {
+		if item.UserQuantity > item.FullFinalProduct.Amount {
+			return nil, status.Errorf(codes.InvalidArgument, "Вы патаетесь оформить больше товара: %s  чем есть в наличии", item.FullFinalProduct.Name)
+		}
 		order.TotalPrice = order.TotalPrice + (item.FullFinalProduct.Price * float64(item.UserQuantity))
 		order.Items = append(order.Items, item)
 	}

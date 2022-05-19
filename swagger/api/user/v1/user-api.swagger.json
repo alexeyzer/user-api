@@ -229,6 +229,37 @@
         ]
       }
     },
+    "/v1/order/list/by-user-id": {
+      "get": {
+        "operationId": "userApiService_ListOrderByUserId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
     "/v1/role": {
       "get": {
         "operationId": "userApiService_GetRole",
@@ -410,7 +441,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiCreateUserResponse"
+              "$ref": "#/definitions/apiGetUserResponse"
             }
           },
           "default": {
@@ -609,6 +640,18 @@
     }
   },
   "definitions": {
+    "GetUserResponseUserRoles": {
+      "type": "object",
+      "properties": {
+        "userRoleId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "apiAddToCartRequest": {
       "type": "object",
       "properties": {
@@ -791,6 +834,36 @@
         }
       }
     },
+    "apiGetUserResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "patronymic": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GetUserResponseUserRoles"
+          }
+        }
+      }
+    },
     "apiGetUserRoleResponse": {
       "type": "object",
       "properties": {
@@ -901,6 +974,12 @@
         },
         "accessToAdminPanel": {
           "type": "boolean"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiCreateRoleResponse"
+          }
         }
       }
     },

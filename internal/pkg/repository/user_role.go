@@ -12,7 +12,7 @@ type UserRoleQuery interface {
 	Create(ctx context.Context, req datastruct.UserRole) (*datastruct.UserRole, error)
 	Get(ctx context.Context, ID int64) (*datastruct.UserRole, error)
 	Exists(ctx context.Context, userID, roleID int64) (bool, error)
-	List(ctx context.Context, userID int64) ([]string, error)
+	List(ctx context.Context, userID int64) ([]*datastruct.UserRoleWithName, error)
 	Delete(ctx context.Context, ID int64) error
 }
 
@@ -84,9 +84,9 @@ func (q *userRoleQuery) Get(ctx context.Context, ID int64) (*datastruct.UserRole
 	return &userRole, nil
 }
 
-func (q *userRoleQuery) List(ctx context.Context, userID int64) ([]string, error) {
+func (q *userRoleQuery) List(ctx context.Context, userID int64) ([]*datastruct.UserRoleWithName, error) {
 	qb := q.builder.
-		Select("rt.name as role_name").
+		Select("urt.id, urt.user_id, urt.role_id, rt.name as role_name").
 		From(datastruct.UserRoleNameTableName + " as urt").
 		Where(squirrel.Eq{"user_id": userID}).
 		LeftJoin(datastruct.RoleTableName + " as rt on rt.id = urt.role_id")
@@ -96,14 +96,14 @@ func (q *userRoleQuery) List(ctx context.Context, userID int64) ([]string, error
 		return nil, err
 	}
 
-	var userRolesName []string
+	var userRoles []*datastruct.UserRoleWithName
 
-	err = q.db.SelectContext(ctx, &userRolesName, query, args...)
+	err = q.db.SelectContext(ctx, &userRoles, query, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	return userRolesName, nil
+	return userRoles, nil
 }
 
 func (q *userRoleQuery) Exists(ctx context.Context, userID, roleID int64) (bool, error) {

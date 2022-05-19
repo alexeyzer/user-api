@@ -15,14 +15,14 @@ type UserRoleService interface {
 	CreateUserRole(ctx context.Context, req datastruct.UserRole) (*datastruct.UserRole, error)
 	GetUserRole(ctx context.Context, ID int64) (*datastruct.UserRole, error)
 	DeleteUserRole(ctx context.Context, ID int64) error
-	ListUserRoles(ctx context.Context, userID int64) ([]string, error)
+	ListUserRoles(ctx context.Context, userID int64) ([]*datastruct.UserRoleWithName, error)
 }
 
 type userRoleService struct {
 	dao repository.DAO
 }
 
-func (s *userRoleService) ListUserRoles(ctx context.Context, userID int64) ([]string, error) {
+func (s *userRoleService) ListUserRoles(ctx context.Context, userID int64) ([]*datastruct.UserRoleWithName, error) {
 	res, err := s.dao.UserRoleQuery().List(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *userRoleService) GetUserRole(ctx context.Context, ID int64) (*datastruc
 }
 
 func (s *userRoleService) DeleteUserRole(ctx context.Context, ID int64) error {
-	_, err := s.dao.RoleQuery().Get(ctx, ID)
+	_, err := s.dao.UserRoleQuery().Get(ctx, ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return status.Errorf(codes.InvalidArgument, "userRole with id = %d doesn't exist", ID)

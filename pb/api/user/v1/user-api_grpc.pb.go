@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserApiServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	ListUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SessionCheck(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SessionCheckResponse, error)
@@ -40,6 +40,7 @@ type UserApiServiceClient interface {
 	DeleteAllFromCart(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateOrder(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CreateOrderResponse, error)
 	ListOrder(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrderResponse, error)
+	ListOrderByUserId(ctx context.Context, in *ListOrderByUserIdRequest, opts ...grpc.CallOption) (*ListOrderResponse, error)
 }
 
 type userApiServiceClient struct {
@@ -68,8 +69,8 @@ func (c *userApiServiceClient) ListUsers(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
-func (c *userApiServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
-	out := new(CreateUserResponse)
+func (c *userApiServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
 	err := c.cc.Invoke(ctx, "/user.api.userApiService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -239,13 +240,22 @@ func (c *userApiServiceClient) ListOrder(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
+func (c *userApiServiceClient) ListOrderByUserId(ctx context.Context, in *ListOrderByUserIdRequest, opts ...grpc.CallOption) (*ListOrderResponse, error) {
+	out := new(ListOrderResponse)
+	err := c.cc.Invoke(ctx, "/user.api.userApiService/ListOrderByUserId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserApiServiceServer is the server API for UserApiService service.
 // All implementations must embed UnimplementedUserApiServiceServer
 // for forward compatibility
 type UserApiServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	ListUsers(context.Context, *emptypb.Empty) (*ListUsersResponse, error)
-	GetUser(context.Context, *GetUserRequest) (*CreateUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	SessionCheck(context.Context, *emptypb.Empty) (*SessionCheckResponse, error)
@@ -264,6 +274,7 @@ type UserApiServiceServer interface {
 	DeleteAllFromCart(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	CreateOrder(context.Context, *emptypb.Empty) (*CreateOrderResponse, error)
 	ListOrder(context.Context, *emptypb.Empty) (*ListOrderResponse, error)
+	ListOrderByUserId(context.Context, *ListOrderByUserIdRequest) (*ListOrderResponse, error)
 	mustEmbedUnimplementedUserApiServiceServer()
 }
 
@@ -277,7 +288,7 @@ func (UnimplementedUserApiServiceServer) CreateUser(context.Context, *CreateUser
 func (UnimplementedUserApiServiceServer) ListUsers(context.Context, *emptypb.Empty) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
 }
-func (UnimplementedUserApiServiceServer) GetUser(context.Context, *GetUserRequest) (*CreateUserResponse, error) {
+func (UnimplementedUserApiServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserApiServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
@@ -333,6 +344,9 @@ func (UnimplementedUserApiServiceServer) CreateOrder(context.Context, *emptypb.E
 }
 func (UnimplementedUserApiServiceServer) ListOrder(context.Context, *emptypb.Empty) (*ListOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrder not implemented")
+}
+func (UnimplementedUserApiServiceServer) ListOrderByUserId(context.Context, *ListOrderByUserIdRequest) (*ListOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrderByUserId not implemented")
 }
 func (UnimplementedUserApiServiceServer) mustEmbedUnimplementedUserApiServiceServer() {}
 
@@ -725,6 +739,24 @@ func _UserApiService_ListOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserApiService_ListOrderByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrderByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserApiServiceServer).ListOrderByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.api.userApiService/ListOrderByUserId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserApiServiceServer).ListOrderByUserId(ctx, req.(*ListOrderByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserApiService_ServiceDesc is the grpc.ServiceDesc for UserApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -815,6 +847,10 @@ var UserApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOrder",
 			Handler:    _UserApiService_ListOrder_Handler,
+		},
+		{
+			MethodName: "ListOrderByUserId",
+			Handler:    _UserApiService_ListOrderByUserId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

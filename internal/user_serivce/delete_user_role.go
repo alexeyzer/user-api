@@ -19,7 +19,7 @@ func (s *UserApiServiceServer) DeleteUserRole(ctx context.Context, req *desc.Del
 		return nil, status.Error(codes.PermissionDenied, "only for admins")
 	}
 
-	err = s.roleService.DeleteRole(ctx, req.GetId())
+	err = s.userRoleService.DeleteUserRole(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}

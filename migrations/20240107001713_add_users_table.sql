@@ -8,7 +8,6 @@ CREATE TABLE users(
     password bytea not null,
     phone varchar(100),
     email varchar(200) not null,
-    username varchar(200) not null
 );
 
 -- +goose StatementEnd

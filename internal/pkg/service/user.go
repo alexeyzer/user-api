@@ -18,10 +18,10 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error)
-	Login(ctx context.Context, req *desc.LoginRequest) (bool, string, *datastruct.User, error)
+	Login(ctx context.Context, req *desc.LoginRequest) ([]*datastruct.UserRoleWithName, string, *datastruct.User, error)
 	SessionCheck(ctx context.Context, sessionID string) (*datastruct.UserWithRoles, error)
 	DeleteSession(ctx context.Context, sessionID string) error
-	GetUser(ctx context.Context, ID int64) (*datastruct.User, error)
+	GetUser(ctx context.Context, ID int64) (*datastruct.User, []*datastruct.UserRoleWithName, error)
 	ListUsers(ctx context.Context) ([]*datastruct.User, error)
 }
 
@@ -30,12 +30,16 @@ type userService struct {
 	redis client.RedisClient
 }
 
-func (s *userService) GetUser(ctx context.Context, ID int64) (*datastruct.User, error) {
+func (s *userService) GetUser(ctx context.Context, ID int64) (*datastruct.User, []*datastruct.UserRoleWithName, error) {
 	resp, err := s.dao.UserQuery().GetByID(ctx, ID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return resp, nil
+	roles, err := s.dao.UserRoleQuery().List(ctx, resp.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+	return resp, roles, nil
 }
 
 func (s *userService) ListUsers(ctx context.Context) ([]*datastruct.User, error) {
@@ -85,47 +89,46 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 	if err != nil {
 		return nil, err
 	}
+	rolesName := make([]string, 0, len(roles))
+	for _, role := range roles {
+		rolesName = append(rolesName, role.RoleName)
+	}
 
 	return &datastruct.UserWithRoles{
 		ID:    user.ID,
 		Email: user.Email,
-		Roles: roles,
+		Roles: rolesName,
 	}, nil
 }
 
-func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) (bool, string, *datastruct.User, error) {
-	accessAdminPage := false
-
+func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) ([]*datastruct.UserRoleWithName, string, *datastruct.User, error) {
 	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
 	if err != nil {
-		return accessAdminPage, "", nil, err
+		return nil, "", nil, err
 	}
 	if exists == false {
-		return accessAdminPage, "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
+		return nil, "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
 	}
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
-		return accessAdminPage, "", nil, err
+		return nil, "", nil, err
 	}
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(req.Password))
 	if err != nil {
-		return accessAdminPage, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
+		return nil, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
 	}
 
 	sessionID, err := s.createSession(ctx, user)
 	if err != nil {
-		return accessAdminPage, "", nil, err
+		return nil, "", nil, err
 	}
 
 	roles, err := s.dao.UserRoleQuery().List(ctx, user.ID)
 	if err != nil {
-		return accessAdminPage, "", nil, err
-	}
-	if len(roles) > 0 {
-		accessAdminPage = true
+		return nil, "", nil, err
 	}
 
-	return accessAdminPage, sessionID, user, nil
+	return roles, sessionID, user, nil
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error) {

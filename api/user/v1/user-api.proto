@@ -21,7 +21,7 @@ import "validate/validate.proto";
      };
    };
 
-   rpc GetUser(GetUserRequest) returns (CreateUserResponse) {
+   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
      option (google.api.http) = {
        get: "/v1/user"
      };
@@ -141,6 +141,15 @@ import "validate/validate.proto";
        get: "/v1/order/list"
      };
    };
+   rpc ListOrderByUserId(ListOrderByUserIdRequest) returns (ListOrderResponse) {
+     option (google.api.http) = {
+       get: "/v1/order/list/by-user-id"
+     };
+   };
+ }
+
+ message ListOrderByUserIdRequest {
+   int64 user_id = 1;
  }
 
  message GetUserRequest {
@@ -300,6 +309,20 @@ message LoginRequest {
    repeated CreateUserResponse users = 1;
  }
 
+message GetUserResponse {
+  int64 id = 1;
+  string name = 2;
+  string surname = 3;
+  string patronymic = 4;
+  string phone = 5;
+  string email = 6;
+  repeated UserRoles roles = 7;
+  message UserRoles {
+    int64 user_role_id = 1;
+    string name = 2;
+  }
+}
+
  message CreateUserResponse {
    int64 id = 1;
    string name = 2;
@@ -318,4 +341,5 @@ message LoginRequest {
    string email = 6;
    string session = 7;
    bool access_to_admin_panel = 8;
+   repeated CreateRoleResponse roles = 9;
  }

@@ -6,11 +6,11 @@ import (
 )
 
 func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest) (*desc.LoginResponse, error) {
-	accessToAminPage, sessionID, res, err := s.userService.Login(ctx, req)
+	roles, sessionID, res, err := s.userService.Login(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &desc.LoginResponse{
+	resp := &desc.LoginResponse{
 		Id:                 res.ID,
 		Name:               res.Name,
 		Surname:            res.Surname,
@@ -18,6 +18,15 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 		Phone:              res.Phone,
 		Email:              res.Email,
 		Session:            sessionID,
-		AccessToAdminPanel: accessToAminPage,
-	}, nil
+		AccessToAdminPanel: len(roles) > 0,
+		Roles:              make([]*desc.CreateRoleResponse, 0, len(roles)),
+	}
+	for _, role := range roles {
+		resp.Roles = append(resp.Roles, &desc.CreateRoleResponse{
+			Id:          role.RoleID,
+			Name:        role.RoleName,
+			Description: "",
+		})
+	}
+	return resp, nil
 }
