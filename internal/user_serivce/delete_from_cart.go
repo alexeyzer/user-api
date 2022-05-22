@@ -15,5 +15,5 @@ func (s *UserApiServiceServer) DeleteFromCart(ctx context.Context, req *desc.Del
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return &emptypb.Empty{}, nil
 }
