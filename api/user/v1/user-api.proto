@@ -21,6 +21,12 @@ import "validate/validate.proto";
      };
    };
 
+   rpc GetUserInfoAboutProduct(GetUserInfoAboutProductRequest) returns (GetUserInfoAboutProductResponse) {
+     option (google.api.http) = {
+       get: "/v1/favorite/check"
+     };
+   };
+
    rpc deleteItemFromFavorite(deleteItemFromFavoriteRequest) returns (google.protobuf.Empty) {
      option (google.api.http) = {
        delete: "/v1/favorite"
@@ -173,6 +179,15 @@ import "validate/validate.proto";
      };
    };
  }
+
+message GetUserInfoAboutProductRequest {
+   int64 product_id = 1;
+}
+
+message GetUserInfoAboutProductResponse {
+  int64 user_quantity = 1;
+   bool is_favorite = 2;
+}
 
  message deleteItemFromFavoriteRequest {
    int64 id = 1;

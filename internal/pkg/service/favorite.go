@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/alexeyzer/user-api/internal/client"
 	"github.com/alexeyzer/user-api/internal/pkg/datastruct"
 	"github.com/alexeyzer/user-api/internal/pkg/repository"

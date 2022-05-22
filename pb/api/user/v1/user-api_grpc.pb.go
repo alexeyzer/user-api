@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserApiServiceClient interface {
 	AddItemToFavorite(ctx context.Context, in *AddItemToFavoriteRequest, opts ...grpc.CallOption) (*AddItemToFavoriteResponse, error)
 	ListFavorite(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListFavoriteResponse, error)
+	GetUserInfoAboutProduct(ctx context.Context, in *GetUserInfoAboutProductRequest, opts ...grpc.CallOption) (*GetUserInfoAboutProductResponse, error)
 	DeleteItemFromFavorite(ctx context.Context, in *DeleteItemFromFavoriteRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	ListUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
@@ -67,6 +68,15 @@ func (c *userApiServiceClient) AddItemToFavorite(ctx context.Context, in *AddIte
 func (c *userApiServiceClient) ListFavorite(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListFavoriteResponse, error) {
 	out := new(ListFavoriteResponse)
 	err := c.cc.Invoke(ctx, "/user.api.userApiService/ListFavorite", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userApiServiceClient) GetUserInfoAboutProduct(ctx context.Context, in *GetUserInfoAboutProductRequest, opts ...grpc.CallOption) (*GetUserInfoAboutProductResponse, error) {
+	out := new(GetUserInfoAboutProductResponse)
+	err := c.cc.Invoke(ctx, "/user.api.userApiService/GetUserInfoAboutProduct", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -295,6 +305,7 @@ func (c *userApiServiceClient) ListOrderByUserId(ctx context.Context, in *ListOr
 type UserApiServiceServer interface {
 	AddItemToFavorite(context.Context, *AddItemToFavoriteRequest) (*AddItemToFavoriteResponse, error)
 	ListFavorite(context.Context, *emptypb.Empty) (*ListFavoriteResponse, error)
+	GetUserInfoAboutProduct(context.Context, *GetUserInfoAboutProductRequest) (*GetUserInfoAboutProductResponse, error)
 	DeleteItemFromFavorite(context.Context, *DeleteItemFromFavoriteRequest) (*emptypb.Empty, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	ListUsers(context.Context, *emptypb.Empty) (*ListUsersResponse, error)
@@ -331,6 +342,9 @@ func (UnimplementedUserApiServiceServer) AddItemToFavorite(context.Context, *Add
 }
 func (UnimplementedUserApiServiceServer) ListFavorite(context.Context, *emptypb.Empty) (*ListFavoriteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFavorite not implemented")
+}
+func (UnimplementedUserApiServiceServer) GetUserInfoAboutProduct(context.Context, *GetUserInfoAboutProductRequest) (*GetUserInfoAboutProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoAboutProduct not implemented")
 }
 func (UnimplementedUserApiServiceServer) DeleteItemFromFavorite(context.Context, *DeleteItemFromFavoriteRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteItemFromFavorite not implemented")
@@ -449,6 +463,24 @@ func _UserApiService_ListFavorite_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserApiServiceServer).ListFavorite(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserApiService_GetUserInfoAboutProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserInfoAboutProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserApiServiceServer).GetUserInfoAboutProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.api.userApiService/GetUserInfoAboutProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserApiServiceServer).GetUserInfoAboutProduct(ctx, req.(*GetUserInfoAboutProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -899,6 +931,10 @@ var UserApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListFavorite",
 			Handler:    _UserApiService_ListFavorite_Handler,
+		},
+		{
+			MethodName: "GetUserInfoAboutProduct",
+			Handler:    _UserApiService_GetUserInfoAboutProduct_Handler,
 		},
 		{
 			MethodName: "deleteItemFromFavorite",

@@ -232,6 +232,37 @@
         ]
       }
     },
+    "/v1/favorite/check": {
+      "get": {
+        "operationId": "userApiService_GetUserInfoAboutProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetUserInfoAboutProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "userApiService_Login",
@@ -942,6 +973,18 @@
         },
         "description": {
           "type": "string"
+        }
+      }
+    },
+    "apiGetUserInfoAboutProductResponse": {
+      "type": "object",
+      "properties": {
+        "userQuantity": {
+          "type": "string",
+          "format": "int64"
+        },
+        "isFavorite": {
+          "type": "boolean"
         }
       }
     },
