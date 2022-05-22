@@ -23,8 +23,9 @@ func (s *UserApiServiceServer) productsToListFavoriteResponse(resp map[int64]*da
 	internalResp := &desc.ListFavoriteResponse{
 		Products: make([]*desc.ProductResponse, 0, len(resp)),
 	}
-	for _, item := range resp {
+	for id, item := range resp {
 		internalResp.Products = append(internalResp.Products, &desc.ProductResponse{
+			Id:          id,
 			FavoriteId:  item.FavoriteID,
 			Name:        item.Name,
 			Description: item.Description,

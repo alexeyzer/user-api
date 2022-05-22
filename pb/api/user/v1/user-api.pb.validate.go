@@ -4474,6 +4474,8 @@ func (m *ProductResponse) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
 	// no validation rules for FavoriteId
 
 	// no validation rules for Name

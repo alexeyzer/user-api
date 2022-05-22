@@ -400,12 +400,13 @@ message GetUserResponse {
  }
 
 message ProductResponse {
-  int64 favorite_id = 1;
-  string name = 2;
-  string description = 3;
-  string url = 4;
-  int64 brand_id = 5;
-  int64 category_id = 6;
-  string color = 7;
-  double price = 8;
+  int64 id = 1;
+  int64 favorite_id = 2;
+  string name = 3;
+  string description = 4;
+  string url = 5;
+  int64 brand_id = 6;
+  int64 category_id = 7;
+  string color = 8;
+  double price = 9;
 }

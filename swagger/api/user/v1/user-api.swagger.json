@@ -1125,6 +1125,10 @@
     "apiProductResponse": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
         "favoriteId": {
           "type": "string",
           "format": "int64"
