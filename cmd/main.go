@@ -155,9 +155,10 @@ func main() {
 	roleService := service.NewRoleService(dao)
 	userRoleService := service.NewUserRoleService(dao)
 	cartService := service.NewCartService(dao, productAPIClient)
-	orderService := service.NewOrderService(dao, cartService)
+	orderService := service.NewOrderService(dao, cartService, productAPIClient)
+	favoriteService := service.NewFavoriteService(dao, productAPIClient)
 
-	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService, userRoleService, cartService, orderService)
+	userApiServiceServer := user_serivce.NewUserApiServiceServer(userService, roleService, userRoleService, cartService, orderService, favoriteService)
 	if err := RunServer(ctx, userApiServiceServer); err != nil {
 		log.Fatal(err)
 	}

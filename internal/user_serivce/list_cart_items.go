@@ -23,6 +23,8 @@ func (s *UserApiServiceServer) datastructFullCartItemMapToProto(resp map[int64]*
 	internalResp := &desc.ListCartItemsResponse{
 		Products: make([]*desc.FullCartItem, 0, len(resp)),
 	}
+	totalPrice := float64(0)
+	totalCount := int64(0)
 	for _, fullCartItem := range resp {
 		internalResp.Products = append(internalResp.Products, &desc.FullCartItem{
 			FullProductId: fullCartItem.FullFinalProduct.ID,
@@ -38,6 +40,11 @@ func (s *UserApiServiceServer) datastructFullCartItemMapToProto(resp map[int64]*
 			UserQuantity:  fullCartItem.UserQuantity,
 			Id:            fullCartItem.ID,
 		})
+		totalPrice = totalPrice + fullCartItem.FullFinalProduct.Price
+		totalCount = totalCount + fullCartItem.UserQuantity
 	}
+	internalResp.TotalPrice = totalPrice
+	internalResp.TotalCountProducts = totalCount
+
 	return internalResp
 }

@@ -8,6 +8,25 @@ import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
  service userApiService {
+   rpc addItemToFavorite(addItemToFavoriteRequest) returns (addItemToFavoriteResponse) {
+     option (google.api.http) = {
+       post: "/v1/favorite"
+       body: "*"
+     };
+   };
+
+   rpc ListFavorite(google.protobuf.Empty) returns (ListFavoriteResponse) {
+     option (google.api.http) = {
+       get: "/v1/favorite"
+     };
+   };
+
+   rpc deleteItemFromFavorite(deleteItemFromFavoriteRequest) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+       delete: "/v1/favorite"
+     };
+   };
+
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/v1/user"
@@ -112,6 +131,13 @@ import "validate/validate.proto";
      };
    };
 
+   rpc updateCart(updateCartRequest) returns (updateCartResponse) {
+     option (google.api.http) = {
+       put: "/v1/cart"
+       body: "*"
+     };
+   };
+
    rpc DeleteFromCart(DeleteFromCartRequest) returns (google.protobuf.Empty) {
      option (google.api.http) = {
        delete: "/v1/cart"
@@ -146,6 +172,20 @@ import "validate/validate.proto";
        get: "/v1/order/list/by-user-id"
      };
    };
+ }
+
+ message deleteItemFromFavoriteRequest {
+   int64 id = 1;
+ }
+
+ message addItemToFavoriteResponse {
+   int64 id = 1;
+   int64 product_id = 2;
+   int64 user_id = 3;
+ }
+
+ message addItemToFavoriteRequest {
+   int64 product_id = 1;
  }
 
  message ListOrderByUserIdRequest {
@@ -189,7 +229,8 @@ enum OrderStatus {
 
  message ListCartItemsResponse {
    repeated fullCartItem products = 1;
-
+   double total_price = 2;
+   int64 total_count_products = 3;
  }
 
 message fullCartItem {
@@ -210,6 +251,16 @@ message fullCartItem {
  message DeleteFromCartRequest {
    int64 id = 1 [(validate.rules).int64.gt = 0];
  }
+
+ message updateCartRequest {
+   int64 final_product_id = 1 [(validate.rules).int64.gt = 0];
+   int64 quantity = 2 [(validate.rules).int64.gt = 0];
+ }
+
+message updateCartResponse {
+  int64 final_product_id = 1;
+  int64 quantity = 2;
+}
 
  message AddToCartRequest {
    int64 final_product_id = 1 [(validate.rules).int64.gt = 0];
@@ -343,3 +394,18 @@ message GetUserResponse {
    bool access_to_admin_panel = 8;
    repeated CreateRoleResponse roles = 9;
  }
+
+ message ListFavoriteResponse {
+   repeated ProductResponse products= 1;
+ }
+
+message ProductResponse {
+  int64 favorite_id = 1;
+  string name = 2;
+  string description = 3;
+  string url = 4;
+  int64 brand_id = 5;
+  int64 category_id = 6;
+  string color = 7;
+  double price = 8;
+}

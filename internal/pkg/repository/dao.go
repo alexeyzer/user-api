@@ -13,6 +13,7 @@ type DAO interface {
 	UserRoleQuery() UserRoleQuery
 	CartQuery() CartQuery
 	OrderQuery() OrderQuery
+	FavoriteQuery() FavoriteQuery
 }
 
 type dao struct {
@@ -21,6 +22,7 @@ type dao struct {
 	userQuery     UserQuery
 	cartQuery     CartQuery
 	orderQuery    OrderQuery
+	favoriteQuery FavoriteQuery
 	db            *sqlx.DB
 }
 
@@ -45,6 +47,13 @@ func NewDao() (DAO, error) {
 	}
 	dao.db = conn
 	return dao, nil
+}
+
+func (d *dao) FavoriteQuery() FavoriteQuery {
+	if d.favoriteQuery == nil {
+		d.favoriteQuery = NewFavoriteQuery(d.db)
+	}
+	return d.favoriteQuery
 }
 
 func (d *dao) OrderQuery() OrderQuery {

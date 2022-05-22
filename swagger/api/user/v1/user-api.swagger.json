@@ -75,6 +75,36 @@
         "tags": [
           "userApiService"
         ]
+      },
+      "put": {
+        "operationId": "userApiService_updateCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiupdateCartResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiupdateCartRequest"
+            }
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
       }
     },
     "/v1/cart/all": {
@@ -116,6 +146,87 @@
             }
           }
         },
+        "tags": [
+          "userApiService"
+        ]
+      }
+    },
+    "/v1/favorite": {
+      "get": {
+        "operationId": "userApiService_ListFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListFavoriteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "userApiService"
+        ]
+      },
+      "delete": {
+        "operationId": "userApiService_deleteItemFromFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "userApiService"
+        ]
+      },
+      "post": {
+        "operationId": "userApiService_addItemToFavorite",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiaddItemToFavoriteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiaddItemToFavoriteRequest"
+            }
+          }
+        ],
         "tags": [
           "userApiService"
         ]
@@ -889,6 +1000,25 @@
           "items": {
             "$ref": "#/definitions/apifullCartItem"
           }
+        },
+        "totalPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalCountProducts": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiListFavoriteResponse": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiProductResponse"
+          }
         }
       }
     },
@@ -992,6 +1122,39 @@
       ],
       "default": "CREATED"
     },
+    "apiProductResponse": {
+      "type": "object",
+      "properties": {
+        "favoriteId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "brandId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "categoryId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "color": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "apiSessionCheckResponse": {
       "type": "object",
       "properties": {
@@ -1040,6 +1203,32 @@
         }
       }
     },
+    "apiaddItemToFavoriteRequest": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiaddItemToFavoriteResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "productId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "apifullCartItem": {
       "type": "object",
       "properties": {
@@ -1081,6 +1270,32 @@
           "format": "int64"
         },
         "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiupdateCartRequest": {
+      "type": "object",
+      "properties": {
+        "finalProductId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiupdateCartResponse": {
+      "type": "object",
+      "properties": {
+        "finalProductId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quantity": {
           "type": "string",
           "format": "int64"
         }

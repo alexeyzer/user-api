@@ -10,7 +10,7 @@ import (
 
 type CartQuery interface {
 	Create(ctx context.Context, req datastruct.CartItem) (*datastruct.CartItem, error)
-	Update(ctx context.Context, req datastruct.UpdateCartItem) error
+	Update(ctx context.Context, userID, finalProductID, quantity int64) (*datastruct.CartItem, error)
 	Get(ctx context.Context, ID int64) (*datastruct.CartItem, error)
 	Exists(ctx context.Context, userID, finalProductID int64) (bool, error)
 	List(ctx context.Context, userID int64) ([]*datastruct.CartItem, error)
@@ -40,21 +40,25 @@ func (q *cartQuery) DeleteByUserID(ctx context.Context, userID int64) error {
 	return nil
 }
 
-func (q *cartQuery) Update(ctx context.Context, req datastruct.UpdateCartItem) error {
+func (q *cartQuery) Update(ctx context.Context, userID, finalProductID, quantity int64) (*datastruct.CartItem, error) {
 	qb := q.builder.Update(datastruct.CartTableName).
-		Where(squirrel.Eq{"id": req.ID}).
-		Set("quantity", req.Quantity)
+		Where(squirrel.And{squirrel.Eq{"user_id": userID}, squirrel.Eq{"final_product_id": finalProductID}}).
+		Set("quantity", quantity).
+		Suffix("RETURNING *")
 
 	query, args, err := qb.ToSql()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = q.db.ExecContext(ctx, query, args...)
+	var cartItem datastruct.CartItem
+
+	err = q.db.GetContext(ctx, &cartItem, query, args...)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return &cartItem, nil
 }
 
 func (q *cartQuery) Delete(ctx context.Context, ID int64) error {

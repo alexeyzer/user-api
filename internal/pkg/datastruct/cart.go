@@ -9,11 +9,6 @@ type CartItem struct {
 	Quantity       int64 `db:"quantity"`
 }
 
-type UpdateCartItem struct {
-	ID       int64 `db:"id"`
-	Quantity int64 `db:"quantity"`
-}
-
 type FullCartItem struct {
 	FullFinalProduct FullFinalProduct
 	UserQuantity     int64

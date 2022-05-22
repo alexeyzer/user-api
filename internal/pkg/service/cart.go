@@ -15,6 +15,7 @@ import (
 
 type CartService interface {
 	AddToCart(ctx context.Context, req datastruct.CartItem) (*datastruct.CartItem, error)
+	UpdateCartItem(ctx context.Context, finalProductID, userID, quantity int64) (*datastruct.CartItem, error)
 	GetCartItem(ctx context.Context, ID int64) (*datastruct.CartItem, error)
 	DeleteItemFromCart(ctx context.Context, ID, UserID int64) error
 	DeleteAllFromCart(ctx context.Context, userID int64) error
@@ -24,6 +25,22 @@ type CartService interface {
 type cartService struct {
 	dao              repository.DAO
 	productAPIClient client.ProductAPIClient
+}
+
+func (s *cartService) UpdateCartItem(ctx context.Context, finalProductID, userID, quantity int64) (*datastruct.CartItem, error) {
+	finalProduct, err := s.productAPIClient.GetFinalProduct(ctx, &pb.GetFinalProductRequest{Id: finalProductID})
+	if err != nil {
+		return nil, err
+	}
+	if finalProduct.GetAmount() < quantity {
+		return nil, status.Errorf(codes.InvalidArgument, "Невозможно обновить, введено больше чем доступно")
+	}
+
+	resp, err := s.dao.CartQuery().Update(ctx, userID, finalProductID, quantity)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (s *cartService) DeleteAllFromCart(ctx context.Context, userID int64) error {

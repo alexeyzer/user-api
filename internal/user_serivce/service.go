@@ -2,12 +2,14 @@ package user_serivce
 
 import (
 	"context"
-	"github.com/alexeyzer/user-api/config"
-	"github.com/alexeyzer/user-api/internal/pkg/service"
-	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
+
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/alexeyzer/user-api/config"
+	"github.com/alexeyzer/user-api/internal/pkg/service"
+	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
 )
 
 type UserApiServiceServer struct {
@@ -16,6 +18,7 @@ type UserApiServiceServer struct {
 	userRoleService service.UserRoleService
 	cartService     service.CartService
 	orderService    service.OrderService
+	favoriteService service.FavoriteService
 	desc.UnimplementedUserApiServiceServer
 }
 
@@ -53,6 +56,7 @@ func NewUserApiServiceServer(
 	userRoleService service.UserRoleService,
 	cartService service.CartService,
 	orderService service.OrderService,
+	favoriteService service.FavoriteService,
 ) *UserApiServiceServer {
 	return &UserApiServiceServer{
 		userService:     userService,
@@ -60,5 +64,6 @@ func NewUserApiServiceServer(
 		userRoleService: userRoleService,
 		orderService:    orderService,
 		cartService:     cartService,
+		favoriteService: favoriteService,
 	}
 }

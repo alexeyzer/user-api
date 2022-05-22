@@ -35,6 +35,1344 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on ListProductsByIdRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListProductsByIdRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListProductsByIdRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListProductsByIdRequestMultiError, or nil if none found.
+func (m *ListProductsByIdRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListProductsByIdRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListProductsByIdRequestMultiError(errors)
+	}
+	return nil
+}
+
+// ListProductsByIdRequestMultiError is an error wrapping multiple validation
+// errors returned by ListProductsByIdRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListProductsByIdRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListProductsByIdRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListProductsByIdRequestMultiError) AllErrors() []error { return m }
+
+// ListProductsByIdRequestValidationError is the validation error returned by
+// ListProductsByIdRequest.Validate if the designated constraints aren't met.
+type ListProductsByIdRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListProductsByIdRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListProductsByIdRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListProductsByIdRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListProductsByIdRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListProductsByIdRequestValidationError) ErrorName() string {
+	return "ListProductsByIdRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListProductsByIdRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListProductsByIdRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListProductsByIdRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListProductsByIdRequestValidationError{}
+
+// Validate checks the field values on UpdateProductRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateProductRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateProductRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateProductRequestMultiError, or nil if none found.
+func (m *UpdateProductRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateProductRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for Image
+
+	// no validation rules for ContentType
+
+	// no validation rules for BrandId
+
+	// no validation rules for CategoryId
+
+	// no validation rules for Color
+
+	// no validation rules for Price
+
+	// no validation rules for DeletePhoto
+
+	if len(errors) > 0 {
+		return UpdateProductRequestMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateProductRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateProductRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateProductRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateProductRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateProductRequestMultiError) AllErrors() []error { return m }
+
+// UpdateProductRequestValidationError is the validation error returned by
+// UpdateProductRequest.Validate if the designated constraints aren't met.
+type UpdateProductRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateProductRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateProductRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateProductRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateProductRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateProductRequestValidationError) ErrorName() string {
+	return "UpdateProductRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateProductRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateProductRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateProductRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateProductRequestValidationError{}
+
+// Validate checks the field values on UpdateProductResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateProductResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateProductResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateProductResponseMultiError, or nil if none found.
+func (m *UpdateProductResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateProductResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for Url
+
+	// no validation rules for BrandId
+
+	// no validation rules for CategoryId
+
+	// no validation rules for Color
+
+	// no validation rules for Price
+
+	if len(errors) > 0 {
+		return UpdateProductResponseMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateProductResponseMultiError is an error wrapping multiple validation
+// errors returned by UpdateProductResponse.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateProductResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateProductResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateProductResponseMultiError) AllErrors() []error { return m }
+
+// UpdateProductResponseValidationError is the validation error returned by
+// UpdateProductResponse.Validate if the designated constraints aren't met.
+type UpdateProductResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateProductResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateProductResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateProductResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateProductResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateProductResponseValidationError) ErrorName() string {
+	return "UpdateProductResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateProductResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateProductResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateProductResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateProductResponseValidationError{}
+
+// Validate checks the field values on BatchUpdateFinalProductRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *BatchUpdateFinalProductRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on BatchUpdateFinalProductRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// BatchUpdateFinalProductRequestMultiError, or nil if none found.
+func (m *BatchUpdateFinalProductRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *BatchUpdateFinalProductRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, BatchUpdateFinalProductRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, BatchUpdateFinalProductRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return BatchUpdateFinalProductRequestValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return BatchUpdateFinalProductRequestMultiError(errors)
+	}
+	return nil
+}
+
+// BatchUpdateFinalProductRequestMultiError is an error wrapping multiple
+// validation errors returned by BatchUpdateFinalProductRequest.ValidateAll()
+// if the designated constraints aren't met.
+type BatchUpdateFinalProductRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m BatchUpdateFinalProductRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m BatchUpdateFinalProductRequestMultiError) AllErrors() []error { return m }
+
+// BatchUpdateFinalProductRequestValidationError is the validation error
+// returned by BatchUpdateFinalProductRequest.Validate if the designated
+// constraints aren't met.
+type BatchUpdateFinalProductRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e BatchUpdateFinalProductRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e BatchUpdateFinalProductRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e BatchUpdateFinalProductRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e BatchUpdateFinalProductRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e BatchUpdateFinalProductRequestValidationError) ErrorName() string {
+	return "BatchUpdateFinalProductRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e BatchUpdateFinalProductRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sBatchUpdateFinalProductRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = BatchUpdateFinalProductRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = BatchUpdateFinalProductRequestValidationError{}
+
+// Validate checks the field values on UpdateFinalProductRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateFinalProductRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateFinalProductRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateFinalProductRequestMultiError, or nil if none found.
+func (m *UpdateFinalProductRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateFinalProductRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for SizeId
+
+	// no validation rules for Sku
+
+	// no validation rules for Amount
+
+	if len(errors) > 0 {
+		return UpdateFinalProductRequestMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateFinalProductRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateFinalProductRequest.ValidateAll() if the
+// designated constraints aren't met.
+type UpdateFinalProductRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateFinalProductRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateFinalProductRequestMultiError) AllErrors() []error { return m }
+
+// UpdateFinalProductRequestValidationError is the validation error returned by
+// UpdateFinalProductRequest.Validate if the designated constraints aren't met.
+type UpdateFinalProductRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateFinalProductRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateFinalProductRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateFinalProductRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateFinalProductRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateFinalProductRequestValidationError) ErrorName() string {
+	return "UpdateFinalProductRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateFinalProductRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateFinalProductRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateFinalProductRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateFinalProductRequestValidationError{}
+
+// Validate checks the field values on UpdateFinalProductResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateFinalProductResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateFinalProductResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateFinalProductResponseMultiError, or nil if none found.
+func (m *UpdateFinalProductResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateFinalProductResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for ProductId
+
+	// no validation rules for SizeId
+
+	// no validation rules for Sku
+
+	// no validation rules for Amount
+
+	if len(errors) > 0 {
+		return UpdateFinalProductResponseMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateFinalProductResponseMultiError is an error wrapping multiple
+// validation errors returned by UpdateFinalProductResponse.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateFinalProductResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateFinalProductResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateFinalProductResponseMultiError) AllErrors() []error { return m }
+
+// UpdateFinalProductResponseValidationError is the validation error returned
+// by UpdateFinalProductResponse.Validate if the designated constraints aren't met.
+type UpdateFinalProductResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateFinalProductResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateFinalProductResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateFinalProductResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateFinalProductResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateFinalProductResponseValidationError) ErrorName() string {
+	return "UpdateFinalProductResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateFinalProductResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateFinalProductResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateFinalProductResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateFinalProductResponseValidationError{}
+
+// Validate checks the field values on UpdateBrandRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateBrandRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateBrandRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateBrandRequestMultiError, or nil if none found.
+func (m *UpdateBrandRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateBrandRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if all {
+		switch v := interface{}(m.GetName()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "Name",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "Name",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetName()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateBrandRequestValidationError{
+				field:  "Name",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetDescription()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "Description",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "Description",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDescription()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateBrandRequestValidationError{
+				field:  "Description",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetFile()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "File",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "File",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFile()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateBrandRequestValidationError{
+				field:  "File",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetFileExtension()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "FileExtension",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateBrandRequestValidationError{
+					field:  "FileExtension",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFileExtension()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateBrandRequestValidationError{
+				field:  "FileExtension",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for DeletePhoto
+
+	if len(errors) > 0 {
+		return UpdateBrandRequestMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateBrandRequestMultiError is an error wrapping multiple validation errors
+// returned by UpdateBrandRequest.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateBrandRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateBrandRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateBrandRequestMultiError) AllErrors() []error { return m }
+
+// UpdateBrandRequestValidationError is the validation error returned by
+// UpdateBrandRequest.Validate if the designated constraints aren't met.
+type UpdateBrandRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateBrandRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateBrandRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateBrandRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateBrandRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateBrandRequestValidationError) ErrorName() string {
+	return "UpdateBrandRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateBrandRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateBrandRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateBrandRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateBrandRequestValidationError{}
+
+// Validate checks the field values on UpdateBrandResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateBrandResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateBrandResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateBrandResponseMultiError, or nil if none found.
+func (m *UpdateBrandResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateBrandResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for ImageUrl
+
+	if len(errors) > 0 {
+		return UpdateBrandResponseMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateBrandResponseMultiError is an error wrapping multiple validation
+// errors returned by UpdateBrandResponse.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateBrandResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateBrandResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateBrandResponseMultiError) AllErrors() []error { return m }
+
+// UpdateBrandResponseValidationError is the validation error returned by
+// UpdateBrandResponse.Validate if the designated constraints aren't met.
+type UpdateBrandResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateBrandResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateBrandResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateBrandResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateBrandResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateBrandResponseValidationError) ErrorName() string {
+	return "UpdateBrandResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateBrandResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateBrandResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateBrandResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateBrandResponseValidationError{}
+
+// Validate checks the field values on UpdateSizeRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *UpdateSizeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateSizeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateSizeRequestMultiError, or nil if none found.
+func (m *UpdateSizeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateSizeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return UpdateSizeRequestMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateSizeRequestMultiError is an error wrapping multiple validation errors
+// returned by UpdateSizeRequest.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateSizeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateSizeRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateSizeRequestMultiError) AllErrors() []error { return m }
+
+// UpdateSizeRequestValidationError is the validation error returned by
+// UpdateSizeRequest.Validate if the designated constraints aren't met.
+type UpdateSizeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateSizeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateSizeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateSizeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateSizeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateSizeRequestValidationError) ErrorName() string {
+	return "UpdateSizeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateSizeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateSizeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateSizeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateSizeRequestValidationError{}
+
+// Validate checks the field values on UpdateSizeResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateSizeResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateSizeResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateSizeResponseMultiError, or nil if none found.
+func (m *UpdateSizeResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateSizeResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return UpdateSizeResponseMultiError(errors)
+	}
+	return nil
+}
+
+// UpdateSizeResponseMultiError is an error wrapping multiple validation errors
+// returned by UpdateSizeResponse.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateSizeResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateSizeResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateSizeResponseMultiError) AllErrors() []error { return m }
+
+// UpdateSizeResponseValidationError is the validation error returned by
+// UpdateSizeResponse.Validate if the designated constraints aren't met.
+type UpdateSizeResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateSizeResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateSizeResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateSizeResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateSizeResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateSizeResponseValidationError) ErrorName() string {
+	return "UpdateSizeResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateSizeResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateSizeResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateSizeResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateSizeResponseValidationError{}
+
+// Validate checks the field values on ListProductsByPhotoRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListProductsByPhotoRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListProductsByPhotoRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListProductsByPhotoRequestMultiError, or nil if none found.
+func (m *ListProductsByPhotoRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListProductsByPhotoRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Image
+
+	if len(errors) > 0 {
+		return ListProductsByPhotoRequestMultiError(errors)
+	}
+	return nil
+}
+
+// ListProductsByPhotoRequestMultiError is an error wrapping multiple
+// validation errors returned by ListProductsByPhotoRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ListProductsByPhotoRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListProductsByPhotoRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListProductsByPhotoRequestMultiError) AllErrors() []error { return m }
+
+// ListProductsByPhotoRequestValidationError is the validation error returned
+// by ListProductsByPhotoRequest.Validate if the designated constraints aren't met.
+type ListProductsByPhotoRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListProductsByPhotoRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListProductsByPhotoRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListProductsByPhotoRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListProductsByPhotoRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListProductsByPhotoRequestValidationError) ErrorName() string {
+	return "ListProductsByPhotoRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListProductsByPhotoRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListProductsByPhotoRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListProductsByPhotoRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListProductsByPhotoRequestValidationError{}
+
 // Validate checks the field values on ListFullFinalProductsRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -406,9 +1744,9 @@ func (m *GetFullProductResponse) validate(all bool) error {
 
 	// no validation rules for Url
 
-	// no validation rules for BrandId
+	// no validation rules for BrandName
 
-	// no validation rules for CategoryId
+	// no validation rules for CategoryName
 
 	// no validation rules for Color
 
@@ -653,8 +1991,6 @@ func (m *GetSizeResponse) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for Name
-
-	// no validation rules for CategoryId
 
 	if len(errors) > 0 {
 		return GetSizeResponseMultiError(errors)
@@ -1105,6 +2441,8 @@ func (m *GetFinalProductResponse) validate(all bool) error {
 	// no validation rules for Sku
 
 	// no validation rules for Amount
+
+	// no validation rules for SizeName
 
 	if len(errors) > 0 {
 		return GetFinalProductResponseMultiError(errors)
@@ -2654,8 +3992,6 @@ func (m *CreateSizeRequest) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for CategoryId
-
 	if len(errors) > 0 {
 		return CreateSizeRequestMultiError(errors)
 	}
@@ -2760,8 +4096,6 @@ func (m *CreateSizeResponse) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for Name
-
-	// no validation rules for CategoryId
 
 	if len(errors) > 0 {
 		return CreateSizeResponseMultiError(errors)
@@ -2967,7 +4301,7 @@ func (m *ListBrandsResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetBrandGroups() {
+	for idx, item := range m.GetBrands() {
 		_, _ = idx, item
 
 		if all {
@@ -2975,7 +4309,7 @@ func (m *ListBrandsResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListBrandsResponseValidationError{
-						field:  fmt.Sprintf("BrandGroups[%v]", idx),
+						field:  fmt.Sprintf("Brands[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2983,7 +4317,7 @@ func (m *ListBrandsResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListBrandsResponseValidationError{
-						field:  fmt.Sprintf("BrandGroups[%v]", idx),
+						field:  fmt.Sprintf("Brands[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2992,7 +4326,7 @@ func (m *ListBrandsResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListBrandsResponseValidationError{
-					field:  fmt.Sprintf("BrandGroups[%v]", idx),
+					field:  fmt.Sprintf("Brands[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -3079,6 +4413,141 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListBrandsResponseValidationError{}
+
+// Validate checks the field values on ListBrandsGroupedResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListBrandsGroupedResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListBrandsGroupedResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListBrandsGroupedResponseMultiError, or nil if none found.
+func (m *ListBrandsGroupedResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListBrandsGroupedResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetBrandGroups() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListBrandsGroupedResponseValidationError{
+						field:  fmt.Sprintf("BrandGroups[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListBrandsGroupedResponseValidationError{
+						field:  fmt.Sprintf("BrandGroups[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListBrandsGroupedResponseValidationError{
+					field:  fmt.Sprintf("BrandGroups[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListBrandsGroupedResponseMultiError(errors)
+	}
+	return nil
+}
+
+// ListBrandsGroupedResponseMultiError is an error wrapping multiple validation
+// errors returned by ListBrandsGroupedResponse.ValidateAll() if the
+// designated constraints aren't met.
+type ListBrandsGroupedResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListBrandsGroupedResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListBrandsGroupedResponseMultiError) AllErrors() []error { return m }
+
+// ListBrandsGroupedResponseValidationError is the validation error returned by
+// ListBrandsGroupedResponse.Validate if the designated constraints aren't met.
+type ListBrandsGroupedResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListBrandsGroupedResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListBrandsGroupedResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListBrandsGroupedResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListBrandsGroupedResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListBrandsGroupedResponseValidationError) ErrorName() string {
+	return "ListBrandsGroupedResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListBrandsGroupedResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListBrandsGroupedResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListBrandsGroupedResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListBrandsGroupedResponseValidationError{}
 
 // Validate checks the field values on GetBrandRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -3986,6 +5455,8 @@ func (m *Page) validate(all bool) error {
 	// no validation rules for Number
 
 	// no validation rules for Limit
+
+	// no validation rules for IsAll
 
 	if len(errors) > 0 {
 		return PageMultiError(errors)
@@ -4947,6 +6418,114 @@ var _ interface {
 	ErrorName() string
 } = CreateCategoryResponseValidationError{}
 
+// Validate checks the field values on BatchUpdateFinalProductRequest_Item with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *BatchUpdateFinalProductRequest_Item) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on BatchUpdateFinalProductRequest_Item
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// BatchUpdateFinalProductRequest_ItemMultiError, or nil if none found.
+func (m *BatchUpdateFinalProductRequest_Item) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *BatchUpdateFinalProductRequest_Item) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Amount
+
+	if len(errors) > 0 {
+		return BatchUpdateFinalProductRequest_ItemMultiError(errors)
+	}
+	return nil
+}
+
+// BatchUpdateFinalProductRequest_ItemMultiError is an error wrapping multiple
+// validation errors returned by
+// BatchUpdateFinalProductRequest_Item.ValidateAll() if the designated
+// constraints aren't met.
+type BatchUpdateFinalProductRequest_ItemMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m BatchUpdateFinalProductRequest_ItemMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m BatchUpdateFinalProductRequest_ItemMultiError) AllErrors() []error { return m }
+
+// BatchUpdateFinalProductRequest_ItemValidationError is the validation error
+// returned by BatchUpdateFinalProductRequest_Item.Validate if the designated
+// constraints aren't met.
+type BatchUpdateFinalProductRequest_ItemValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e BatchUpdateFinalProductRequest_ItemValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e BatchUpdateFinalProductRequest_ItemValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e BatchUpdateFinalProductRequest_ItemValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e BatchUpdateFinalProductRequest_ItemValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e BatchUpdateFinalProductRequest_ItemValidationError) ErrorName() string {
+	return "BatchUpdateFinalProductRequest_ItemValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e BatchUpdateFinalProductRequest_ItemValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sBatchUpdateFinalProductRequest_Item.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = BatchUpdateFinalProductRequest_ItemValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = BatchUpdateFinalProductRequest_ItemValidationError{}
+
 // Validate checks the field values on
 // ListFullFinalProductsResponse_FullFinalProduct with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -5077,22 +6656,128 @@ var _ interface {
 	ErrorName() string
 } = ListFullFinalProductsResponse_FullFinalProductValidationError{}
 
-// Validate checks the field values on ListBrandsResponse_BrandGroup with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ListSizesResponse_Size with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListBrandsResponse_BrandGroup) Validate() error {
+func (m *ListSizesResponse_Size) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListBrandsResponse_BrandGroup with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListBrandsResponse_BrandGroupMultiError, or nil if none found.
-func (m *ListBrandsResponse_BrandGroup) ValidateAll() error {
+// ValidateAll checks the field values on ListSizesResponse_Size with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListSizesResponse_SizeMultiError, or nil if none found.
+func (m *ListSizesResponse_Size) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListBrandsResponse_BrandGroup) validate(all bool) error {
+func (m *ListSizesResponse_Size) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return ListSizesResponse_SizeMultiError(errors)
+	}
+	return nil
+}
+
+// ListSizesResponse_SizeMultiError is an error wrapping multiple validation
+// errors returned by ListSizesResponse_Size.ValidateAll() if the designated
+// constraints aren't met.
+type ListSizesResponse_SizeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListSizesResponse_SizeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListSizesResponse_SizeMultiError) AllErrors() []error { return m }
+
+// ListSizesResponse_SizeValidationError is the validation error returned by
+// ListSizesResponse_Size.Validate if the designated constraints aren't met.
+type ListSizesResponse_SizeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListSizesResponse_SizeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListSizesResponse_SizeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListSizesResponse_SizeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListSizesResponse_SizeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListSizesResponse_SizeValidationError) ErrorName() string {
+	return "ListSizesResponse_SizeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListSizesResponse_SizeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListSizesResponse_Size.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListSizesResponse_SizeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListSizesResponse_SizeValidationError{}
+
+// Validate checks the field values on ListBrandsGroupedResponse_BrandGroup
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ListBrandsGroupedResponse_BrandGroup) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListBrandsGroupedResponse_BrandGroup
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// ListBrandsGroupedResponse_BrandGroupMultiError, or nil if none found.
+func (m *ListBrandsGroupedResponse_BrandGroup) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListBrandsGroupedResponse_BrandGroup) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -5108,7 +6793,7 @@ func (m *ListBrandsResponse_BrandGroup) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListBrandsResponse_BrandGroupValidationError{
+					errors = append(errors, ListBrandsGroupedResponse_BrandGroupValidationError{
 						field:  fmt.Sprintf("Brands[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -5116,7 +6801,7 @@ func (m *ListBrandsResponse_BrandGroup) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListBrandsResponse_BrandGroupValidationError{
+					errors = append(errors, ListBrandsGroupedResponse_BrandGroupValidationError{
 						field:  fmt.Sprintf("Brands[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -5125,7 +6810,7 @@ func (m *ListBrandsResponse_BrandGroup) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListBrandsResponse_BrandGroupValidationError{
+				return ListBrandsGroupedResponse_BrandGroupValidationError{
 					field:  fmt.Sprintf("Brands[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -5136,18 +6821,19 @@ func (m *ListBrandsResponse_BrandGroup) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListBrandsResponse_BrandGroupMultiError(errors)
+		return ListBrandsGroupedResponse_BrandGroupMultiError(errors)
 	}
 	return nil
 }
 
-// ListBrandsResponse_BrandGroupMultiError is an error wrapping multiple
-// validation errors returned by ListBrandsResponse_BrandGroup.ValidateAll()
-// if the designated constraints aren't met.
-type ListBrandsResponse_BrandGroupMultiError []error
+// ListBrandsGroupedResponse_BrandGroupMultiError is an error wrapping multiple
+// validation errors returned by
+// ListBrandsGroupedResponse_BrandGroup.ValidateAll() if the designated
+// constraints aren't met.
+type ListBrandsGroupedResponse_BrandGroupMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListBrandsResponse_BrandGroupMultiError) Error() string {
+func (m ListBrandsGroupedResponse_BrandGroupMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -5156,12 +6842,12 @@ func (m ListBrandsResponse_BrandGroupMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListBrandsResponse_BrandGroupMultiError) AllErrors() []error { return m }
+func (m ListBrandsGroupedResponse_BrandGroupMultiError) AllErrors() []error { return m }
 
-// ListBrandsResponse_BrandGroupValidationError is the validation error
-// returned by ListBrandsResponse_BrandGroup.Validate if the designated
+// ListBrandsGroupedResponse_BrandGroupValidationError is the validation error
+// returned by ListBrandsGroupedResponse_BrandGroup.Validate if the designated
 // constraints aren't met.
-type ListBrandsResponse_BrandGroupValidationError struct {
+type ListBrandsGroupedResponse_BrandGroupValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -5169,24 +6855,24 @@ type ListBrandsResponse_BrandGroupValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListBrandsResponse_BrandGroupValidationError) Field() string { return e.field }
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListBrandsResponse_BrandGroupValidationError) Reason() string { return e.reason }
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListBrandsResponse_BrandGroupValidationError) Cause() error { return e.cause }
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListBrandsResponse_BrandGroupValidationError) Key() bool { return e.key }
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListBrandsResponse_BrandGroupValidationError) ErrorName() string {
-	return "ListBrandsResponse_BrandGroupValidationError"
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) ErrorName() string {
+	return "ListBrandsGroupedResponse_BrandGroupValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListBrandsResponse_BrandGroupValidationError) Error() string {
+func (e ListBrandsGroupedResponse_BrandGroupValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -5198,14 +6884,14 @@ func (e ListBrandsResponse_BrandGroupValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListBrandsResponse_BrandGroup.%s: %s%s",
+		"invalid %sListBrandsGroupedResponse_BrandGroup.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListBrandsResponse_BrandGroupValidationError{}
+var _ error = ListBrandsGroupedResponse_BrandGroupValidationError{}
 
 var _ interface {
 	Field() string
@@ -5213,4 +6899,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListBrandsResponse_BrandGroupValidationError{}
+} = ListBrandsGroupedResponse_BrandGroupValidationError{}
