@@ -480,7 +480,16 @@ func (m *AddItemToFavoriteRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ProductId
+	if m.GetProductId() <= 0 {
+		err := AddItemToFavoriteRequestValidationError{
+			field:  "ProductId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return AddItemToFavoriteRequestMultiError(errors)

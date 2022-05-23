@@ -130,7 +130,8 @@ func (q *cartQuery) List(ctx context.Context, userID int64) ([]*datastruct.CartI
 	qb := q.builder.
 		Select("*").
 		From(datastruct.CartTableName).
-		Where(squirrel.Eq{"user_id": userID})
+		Where(squirrel.Eq{"user_id": userID}).
+		OrderBy("id asc")
 	query, args, err := qb.ToSql()
 	if err != nil {
 		return nil, err
