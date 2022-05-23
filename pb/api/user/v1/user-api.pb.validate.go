@@ -165,6 +165,8 @@ func (m *GetUserInfoAboutProductResponse) validate(all bool) error {
 
 	// no validation rules for IsFavorite
 
+	// no validation rules for FavoriteId
+
 	if len(errors) > 0 {
 		return GetUserInfoAboutProductResponseMultiError(errors)
 	}

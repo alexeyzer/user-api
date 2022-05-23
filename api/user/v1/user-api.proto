@@ -187,6 +187,7 @@ message GetUserInfoAboutProductRequest {
 message GetUserInfoAboutProductResponse {
   int64 user_quantity = 1;
    bool is_favorite = 2;
+   int64 favorite_id = 3;
 }
 
  message deleteItemFromFavoriteRequest {

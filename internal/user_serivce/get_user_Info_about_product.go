@@ -9,6 +9,7 @@ import (
 
 func (s *UserApiServiceServer) GetUserInfoAboutProduct(ctx context.Context, req *desc.GetUserInfoAboutProductRequest) (*desc.GetUserInfoAboutProductResponse, error) {
 	isFavorite := false
+	favoriteID := int64(0)
 	userQuantity := int64(0)
 
 	user, err := s.SessionCheck(ctx, &emptypb.Empty{})
@@ -26,12 +27,14 @@ func (s *UserApiServiceServer) GetUserInfoAboutProduct(ctx context.Context, req 
 	if err != nil {
 		return nil, err
 	}
-	if _, ok := favorites[req.GetProductId()]; ok {
+	if favorite, ok := favorites[req.GetProductId()]; ok {
 		isFavorite = true
+		favoriteID = favorite.FavoriteID
 	}
 
 	return &desc.GetUserInfoAboutProductResponse{
 		UserQuantity: userQuantity,
 		IsFavorite:   isFavorite,
+		FavoriteId:   favoriteID,
 	}, nil
 }

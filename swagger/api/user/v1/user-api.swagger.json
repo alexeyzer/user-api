@@ -985,6 +985,10 @@
         },
         "isFavorite": {
           "type": "boolean"
+        },
+        "favoriteId": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
