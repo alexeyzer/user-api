@@ -40,7 +40,7 @@ func (s *UserApiServiceServer) datastructFullCartItemMapToProto(resp map[int64]*
 			UserQuantity:  fullCartItem.UserQuantity,
 			Id:            fullCartItem.ID,
 		})
-		totalPrice = totalPrice + fullCartItem.FullFinalProduct.Price
+		totalPrice = totalPrice + fullCartItem.FullFinalProduct.Price*float64(fullCartItem.UserQuantity)
 		totalCount = totalCount + fullCartItem.UserQuantity
 	}
 	internalResp.TotalPrice = totalPrice
