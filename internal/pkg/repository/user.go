@@ -6,6 +6,8 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/alexeyzer/user-api/internal/pkg/datastruct"
 	"github.com/jmoiron/sqlx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type UserQuery interface {
@@ -108,6 +110,9 @@ func (q *userQuery) Get(ctx context.Context, email string) (*datastruct.User, er
 
 	err = q.db.GetContext(ctx, &user, query, args...)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", email)
+		}
 		return nil, err
 	}
 

@@ -1786,6 +1786,12 @@ func (m *GetFullProductResponse) validate(all bool) error {
 
 	}
 
+	// no validation rules for IsFavorite
+
+	// no validation rules for UserQuantity
+
+	// no validation rules for FavoriteId
+
 	if len(errors) > 0 {
 		return GetFullProductResponseMultiError(errors)
 	}
@@ -6571,6 +6577,8 @@ func (m *ListFullFinalProductsResponse_FullFinalProduct) validate(all bool) erro
 	// no validation rules for Amount
 
 	// no validation rules for Sku
+
+	// no validation rules for ProductId
 
 	if len(errors) > 0 {
 		return ListFullFinalProductsResponse_FullFinalProductMultiError(errors)

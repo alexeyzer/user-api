@@ -15,6 +15,7 @@ import "validate/validate.proto";
      };
    };
 
+
    rpc ListFavorite(google.protobuf.Empty) returns (ListFavoriteResponse) {
      option (google.api.http) = {
        get: "/v1/favorite"
@@ -130,6 +131,12 @@ import "validate/validate.proto";
      };
    };
 
+   rpc IsItemInCart(IsItemInCartRequest) returns (AddToCartResponse) {
+     option (google.api.http) = {
+       get: "/v1/cart/check"
+     };
+   };
+
    rpc AddToCart(AddToCartRequest) returns (AddToCartResponse) {
      option (google.api.http) = {
        post: "/v1/cart"
@@ -179,6 +186,11 @@ import "validate/validate.proto";
      };
    };
  }
+
+ message IsItemInCartRequest {
+   int64 final_product_id = 1;
+ }
+
 
 message GetUserInfoAboutProductRequest {
    int64 product_id = 1;

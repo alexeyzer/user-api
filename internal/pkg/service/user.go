@@ -52,13 +52,13 @@ func (s *userService) ListUsers(ctx context.Context) ([]*datastruct.User, error)
 
 func (s *userService) createSession(ctx context.Context, user *datastruct.User) (string, error) {
 	sessionID := uuid.New().String()
-	err := s.redis.Set(ctx, sessionID, user.Email)
-	if err != nil {
-		log.Warnf("failed to create sessionID for user = %s", user.Email)
-	}
-	if err := grpc.SetHeader(ctx, metadata.Pairs(config.Config.Auth.SessionKey, sessionID)); err != nil {
-		return "", err
-	}
+	go func() {
+		err := s.redis.Set(ctx, sessionID, user.Email)
+		if err != nil {
+			log.Warnf("failed to create sessionID for user = %s", user.Email)
+		}
+	}()
+
 	return sessionID, nil
 }
 
@@ -102,20 +102,13 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 }
 
 func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) ([]*datastruct.UserRoleWithName, string, *datastruct.User, error) {
-	exists, err := s.dao.UserQuery().Exists(ctx, req.Email)
-	if err != nil {
-		return nil, "", nil, err
-	}
-	if exists == false {
-		return nil, "", nil, status.Errorf(codes.InvalidArgument, "User with email = %s doesn't exist", req.Email)
-	}
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
 		return nil, "", nil, err
 	}
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(req.Password))
 	if err != nil {
-		return nil, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for username = %s", req.Email)
+		return nil, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for user with email = %s", req.Email)
 	}
 
 	sessionID, err := s.createSession(ctx, user)
