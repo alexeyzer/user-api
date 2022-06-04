@@ -11,7 +11,7 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 	//if err != nil {
 	//	return nil, err
 	//}
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(50 * time.Millisecond)
 	//resp := &desc.LoginResponse{
 	//	Id:                 res.ID,
 	//	Name:               res.Name,
