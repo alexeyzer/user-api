@@ -11,7 +11,7 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 	if err != nil {
 		return nil, err
 	}
-	time.Sleep(25 * time.Millisecond)
+	//time.Sleep(25 * time.Millisecond)
 	resp := &desc.LoginResponse{
 		Id:                 res.ID,
 		Name:               res.Name,
@@ -30,6 +30,6 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 			Description: "",
 		})
 	}
-	resp := &desc.LoginResponse{}
+	//resp := &desc.LoginResponse{}
 	return resp, nil
 }
