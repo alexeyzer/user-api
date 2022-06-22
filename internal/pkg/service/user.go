@@ -14,7 +14,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"sync"
 )
 
 type UserService interface {
@@ -101,10 +100,6 @@ func (s *userService) SessionCheck(ctx context.Context, sessionID string) (*data
 }
 
 func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) ([]*datastruct.UserRoleWithName, string, *datastruct.User, error) {
-	var roles []*datastruct.UserRoleWithName
-	var sessionID string
-
-	wg := &sync.WaitGroup{}
 
 	user, err := s.dao.UserQuery().Get(ctx, req.Email)
 	if err != nil {
@@ -115,24 +110,13 @@ func (s *userService) Login(ctx context.Context, req *desc.LoginRequest) ([]*dat
 		return nil, "", nil, status.Errorf(codes.InvalidArgument, "Invalid password for user with email = %s", req.Email)
 	}
 
-	wg.Add(1)
-	go func(wg *sync.WaitGroup, sessionID *string){
-		defer wg.Done()
-		session := s.createSession(ctx, user)
-		*sessionID = session
-	}(wg, &sessionID)
+	sessionID := s.createSession(ctx, user)
+	extractedRoles, err := s.dao.UserRoleQuery().List(ctx, user.ID)
+	if err != nil {
+		return nil, "", nil, err
+	}
 
-	wg.Add(1)
-
-	go func(wg *sync.WaitGroup, roles *[]*datastruct.UserRoleWithName){
-		defer wg.Done()
-		extractedRoles, _ := s.dao.UserRoleQuery().List(ctx, user.ID)
-		*roles =extractedRoles
-	}(wg, &roles)
-
-	wg.Wait()
-
-	return roles, sessionID, user, nil
+	return extractedRoles, sessionID, user, nil
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*datastruct.User, error) {
