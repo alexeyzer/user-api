@@ -3,7 +3,6 @@ package user_serivce
 import (
 	"context"
 	desc "github.com/alexeyzer/user-api/pb/api/user/v1"
-	"time"
 )
 
 func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest) (*desc.LoginResponse, error) {
@@ -11,7 +10,6 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 	if err != nil {
 		return nil, err
 	}
-	//time.Sleep(25 * time.Millisecond)
 	resp := &desc.LoginResponse{
 		Id:                 res.ID,
 		Name:               res.Name,
@@ -30,6 +28,5 @@ func (s *UserApiServiceServer) Login(ctx context.Context, req *desc.LoginRequest
 			Description: "",
 		})
 	}
-	//resp := &desc.LoginResponse{}
 	return resp, nil
 }
